@@ -1,0 +1,6 @@
+# fichiers systemes
+.DS_Store
+
+node_modules
+yarn.lock
+yarn-error.log

@@ -1,0 +1,30 @@
+<div class="formulaire_spip formulaire_inscription c-form c-inscription ajax" id="formulaire_inscription">
+	[<p class="reponse_formulaire reponse_formulaire_ok c-message c-message--ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur c-message c-message--erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+		<form method="post" action="#ENV{action}" class="c-inscription__form">
+			#ACTION_FORMULAIRE{#ENV{action}}
+			[(#SAISIE{hidden, self, valeur=#SELF})]
+			<fieldset class="c-inscription-section">
+				<legend class="c-inscription-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:formulaire_compte_titre:></legend>
+				<div class="c-form__groupe c-inscription-groupe c-inscription-groupe--compte editer-groupe">
+					[(#SAISIE{radio, civilite, label=<:vprofils:formulaire_civilite_label:>, class='c-inscription__champ c-inscription__champ--radio c-inscription__champ--civilite', obligatoire=oui,
+						data=#ARRAY{
+							madame, <:vprofils:formulaire_civilite_madame_label:>,
+							monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
+					[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+					[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+					[(#SAISIE{email, mail_inscription, class='c-form__champ c-inscription__champ',
+						label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]
+				</div>
+			</fieldset>
+			<!-- coordonnees -->
+			[(#REM) Piege a robots spammeurs ]
+			<p style="display: none;">
+				<label for="nobot"><:antispam_champ_vide:></label>
+				<input type="text" class="text" name="nobot" id="nobot" value="#ENV{nobot}" size="10" />
+			</p>
+			<p class="boutons"><input type="submit" class="submit c-btn c-btn--submit c-btn--extended c-btn--round c-btn--upper c-inscription__btn u-typo-font-vacarme" value="<:bouton_valider:>" /></p>
+		</form>
+	]
+</div>

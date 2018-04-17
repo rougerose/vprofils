@@ -1,0 +1,49 @@
+<div class="formulaire_spip formulaire_inscription c-form c-inscription ajax" id="formulaire_inscription">
+	[<p class="reponse_formulaire reponse_formulaire_ok c-message c-message--ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur c-message c-message--erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+		<form method="post" action="#ENV{action}" class="c-inscription__form">
+			#ACTION_FORMULAIRE
+			[(#REM) ajouter bio en hidden, afin d'identifier cet auteur comme bénéficiaire d'un abonnement offert ]
+			[(#SAISIE{hidden, bio, defaut='abonnement_offert'})]
+			<div class="c-form__groupe c-inscription-groupe editer-groupe">
+				[(#SAISIE{radio, civilite, label=<:vprofils:formulaire_civilite_label:>, class='c-inscription__champ c-inscription__champ--radio c-inscription__champ--civilite', obligatoire=oui,
+					data=#ARRAY{
+						madame, <:vprofils:formulaire_civilite_madame_label:>,
+						monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
+				[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_tiers_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+				[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_tiers_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+				[(#SAISIE{email, mail_inscription, class='c-form__champ c-inscription__champ',
+					label=<:vprofils:formulaire_mail_tiers_label:>, obligatoire=oui})]
+				<!-- coordonnees -->
+				[(#SAISIE{radio, type_client, label=<:vprofils:formulaire_type_client_label:>,
+					defaut=type_particulier, class='c-inscription__champ c-inscription__champ--radio c-inscription__champ--typeClient',
+					data=#ARRAY{
+						type_particulier, <:vprofils:formulaire_type_client_particulier_label:>, 
+						type_organisation, <:vprofils:formulaire_type_client_organisation_label:>}})]
+				<fieldset class="c-form__groupe c-inscription-groupe c-inscription-groupe--organisation editer-groupe js-groupe-organisation">
+					[(#SAISIE{input, organisation, label=<:vprofils:formulaire_organisation_label:>, class='c-form__champ c-inscription__champ'})]
+					[(#SAISIE{input, service, label=<:vprofils:formulaire_service_label:>, class='c-form__champ c-inscription__champ'})]
+				</fieldset>
+				[(#SAISIE{input, voie, label=<:vprofils:formulaire_voie_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{input, complement, label=<:vprofils:formulaire_complement_label:>, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{input, boite_postale, label=<:vprofils:formulaire_boite_postale_label:>, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{input, code_postal, label=<:vprofils:formulaire_code_postal_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{input, ville, label=<:vprofils:formulaire_ville_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{input, region, label=<:vprofils:formulaire_region_label:>, class='c-form__champ c-inscription__champ',})]
+				[(#SAISIE{pays, pays, label=<:vprofils:formulaire_pays_label:>, defaut=FR, obligatoire=non, code_pays=oui, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, class='c-form__champ c-inscription__champ'})]
+				[(#SAISIE{message_date_envoi, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+			</div>
+			[<div id="js-groupe-organisation">
+				<script src="(#CHEMIN{js/groupe-organisation.min.js})"></script>
+			</div>]
+			[(#REM) Piege a robots spammeurs ]
+			<p style="display: none;">
+				<label for="nobot"><:antispam_champ_vide:></label>
+				<input type="text" class="text" name="nobot" id="nobot" value="#ENV{nobot}" size="10" />
+			</p>
+			<p class="boutons"><input type="submit" class="submit c-btn c-btn--submit c-btn--extended c-btn--round c-btn--upper c-inscription__btn u-typo-font-vacarme" value="<:bouton_valider:>" /></p>
+		</form>
+	]
+</div>

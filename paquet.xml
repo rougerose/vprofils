@@ -1,0 +1,25 @@
+<paquet
+	prefix="vprofils"
+	categorie="auteur"
+	version="1.0.00"
+	etat="dev"
+	compatibilite="[3.2.0;3.2.*]"
+	logo="img/vprofils-64.png"
+	documentation=""
+>
+	<nom>Vacarme, gestion des profils</nom>
+
+	<auteur lien="http://rouge-rose.net">Christophe Le Drean</auteur>
+	<licence>GPL v3</licence>
+	
+	<necessite nom="saisies" compatibilite="[2.6.1;]"/>
+	<!-- <necessite nom="inscriptionmotdepasse" compatibilite="[1.0.11;]"/> -->
+	<necessite nom="coordonnees" compatibilite="[2.3.11;]"/>
+	<necessite nom="contacts" compatibilite="[3.1.0;]"/>
+	<necessite nom="messagerie" />
+	
+	<pipeline nom="formulaire_charger" inclure="vprofils_pipelines.php" />
+	<pipeline nom="formulaire_verifier" inclure="vprofils_pipelines.php" />
+	<pipeline nom="formulaire_traiter" inclure="vprofils_pipelines.php" />
+	<pipeline nom="formulaire_fond" inclure="vprofils_pipelines.php" />
+</paquet>
