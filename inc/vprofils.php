@@ -30,38 +30,28 @@ function vprofils_creer_contact($id_auteur) {
 }
 
 
-function vprofils_creer_organisation($id_auteur, $id_contact) {
+function vprofils_creer_organisation($id_contact) {
 	// nom de l'organisation
 	$organisation = _request('organisation');
-	$service = _request('service');
 	
 	// organisation déjà enregistrée ? 
-	$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.$organisation);
-	
-	if (!$organisation) {
-		include_spip('action/editer_liens');
-		$id_organisation = $definir_contact('organisation/'.$id_auteur);
-		
+	$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation));
+
+	if (intval($id_organisation)) {
+		if ($id_lien = sql_getfetsel('id_organisation', 'spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact')) AND $id_lien == $id_organisation) {
+			return $id_organisation;
+		}
+	} else {
 		include_spip('action/editer_organisation');
+		$id_organisation = organisation_inserer();
 		$organisation_set = array();
-		
-		// nom
 		$organisation_set['nom'] = _request('organisation');
-		
-		// service dans le descriptif
-		// TODO: ajouter un champ extra #SERVICE via vextras ?
-		$organisation_set['descriptif'] = _request('service');
-		
 		organisation_modifier($id_organisation, $organisation_set);
-		
-		// lier l'organisation au contact précédemment créé
-		objet_associer(array('organisation' => $id_organisation), array('contact' => $id_contact));
 	}
-	// 
-	// API SPIP de liaison des objets organisation et adresse.
 	
-	
-	// mettre à jour
+	// lier l'organisation au contact
+	include_spip('action/editer_liens');
+	objet_associer(array('organisation' => $id_organisation), array('contact' => $id_contact));
 	
 	return $id_organisation;
 }

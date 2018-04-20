@@ -81,6 +81,7 @@ function nom($texte) {
  * Liste de dates depuis aujourd'hui jusque dans 6 mois.
  *
  * Ce filtre est utilisé dans la saisie message_date_envoi
+ * du formulaire inscription_tiers
  * 
  * @param  array $tableau 
  * @return array
@@ -91,7 +92,7 @@ function liste_dates($tableau) {
 		$end   = new DateTime('now +6months');
 
 		for($i = $begin; $i <= $end; $i->modify('+1 day')){
-			$tableau[$i->format("U")] = affdate($i->format("Y-m-d h:i:s"));
+			$tableau[$i->format("U")] = affdate($i->format("Y-m-d H:i:s"));
 		}
 	}
 	return $tableau;

@@ -31,10 +31,10 @@ function vprofils_formulaire_fond($flux){
 
 		$page = _request('page');
 		$etape  = _request('etape');
-
-		if ($page == 'offrir' AND $etape == '3') {
-			return $flux;
-		} else {
+		
+		// Toutes les pages d'inscription nécessitent le formulaire
+		// des coordonnées, exceptée la page "offrir" avec étape 3.
+		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
 			$coordonnees = recuperer_fond('formulaires/inc-inscription-coordonnees', $flux['args']['contexte']);
 			$marque = '<!-- coordonnees -->';
 			
@@ -67,12 +67,11 @@ function vprofils_formulaire_charger($flux) {
 		$flux['data']['password'] = '';
 		$flux['data']['password_confirmation'] = '';
 		
-		if ($page == 'offrir' AND $etape == '3') {
-			// return $flux;
-		} else {
+		// Toutes les pages d'inscription nécessitent le formulaire
+		// des coordonnées, exceptée la page "offrir" avec étape 3.
+		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
 			$flux['data']['type_organisation'] = '';
 			$flux['data']['organisation'] = '';
-			$flux['data']['service'] = '';
 			$flux['data']['voie'] = '';
 			$flux['data']['complement'] = '';
 			$flux['data']['boite_postale'] = '';
@@ -133,17 +132,13 @@ function vprofils_formulaire_verifier($flux) {
 		$obligatoire['civilite'] = _request('civilite');
 		$obligatoire['prenom'] = _request('prenom');
 		
-		if ($page == 'offrir' AND $etape == '3') {
-			// rien
-		} else {
+		// Toutes les pages d'inscription nécessitent le formulaire
+		// des coordonnées, exceptée la page "offrir" avec étape 3.
+		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
 			$obligatoire['voie'] = _request('voie');
 			$obligatoire['code_postal'] = _request('code_postal');
 			$obligatoire['ville'] = _request('ville');
 			$obligatoire['pays'] = _request('pays');
-
-			if (_request('type_organisation') == 'on') {
-				$obligatoire['organisation'] = _request('organisation');
-			}
 		}
 		
 		foreach ($obligatoire as $champ => $valeur) {
@@ -179,6 +174,7 @@ function vprofils_formulaire_traiter($flux) {
 	// 
 	// Formulaire login
 	// *************************
+	// 
 	// Si, à la connexion d'un auteur, il n'existe pas de contact
 	// alors on le créé car il s'agit d'un auteur pré-existant 
 	// et, en principe, on a déjà le nom et le prénom puisque 
@@ -193,7 +189,6 @@ function vprofils_formulaire_traiter($flux) {
 			$page = _request('page');
 			$etape = _request('etape');
 			$cible = $flux['args']['args'][0];
-			// $redirect = _request('redirect');
 			
 			$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.$id_auteur);
 			
@@ -221,10 +216,14 @@ function vprofils_formulaire_traiter($flux) {
 					spip_log("Connexion de l'auteur #$id_auteur : impossible de creer sa fiche contact lors de son identification. La conversion automatique de son nom à partir du champ NOM de son profil Auteur n'a pas fonctionné. Le nom enregistré sur son profil Auteur : $nom_auteur", "vprofils" . _LOG_ERREUR);
 				}
 			} else {
-				// Le formulaire de login boucle sur la page courante.
+				// 
+				// Pour les pages d'inscription et d'abonnement, 
+				// le formulaire de login boucle sur la page courante.
+				// 
 				// Si tout est ok au niveau du contact,
 				// et si page publique et si une étape est dans l'environnement,
 				// on peut alors rediriger sur l'étape suivante.
+				// 
 				if (is_url_prive($cible) == false AND $etape AND intval($etape)) {
 					$etape_suivante = $etape + 1;
 					$redirection = generer_url_public($page, "etape=$etape_suivante", true);
@@ -238,48 +237,48 @@ function vprofils_formulaire_traiter($flux) {
 	//
 	// Formulaire inscription
 	// *************************
+	// 
 	// A l'inscription d'un visiteur, ajouter le contact, 
 	// éventuellement l'organisation, et les coordonnées postales.
 	// 
 	if ($flux['args']['form'] == 'inscription') {
 		include_spip('inc/vprofils');
 		
-		// $page = _request('page');
 		$id_auteur = $flux['data']['id_auteur'];
-		
-		
 		
 		// récupérer ou créer le contact
 		$id_contact = vprofils_creer_contact($id_auteur);
 		
-		// créer l'organisation
-		if (_request('organisation')) {
-			$id_organisation = vprofils_creer_organisation($id_auteur, $id_contact);
-		}
+		$page = _request('page');
+		$etape = _request('etape');
 		
-		
-		// 
-		// Adresse
-		// ****************************
-		// 
-		// Ajouter l'adresse à l'auteur
-		// 
-		include_spip('inc/actions');
-		include_spip('inc/editer');
-		$res = formulaires_editer_objet_traiter('adresse', 'new', $id_parent = '', $lier_trad = '', $retour = '', $config_fonc = '', $row = array(), $hidden = '');
-		
-		if ($id_adresse = $res['id_adresse']) {
-			objet_associer(array('adresse' => $id_adresse), array('auteur' => $id_auteur), array('type' => 'livraison'));
+		// Toutes les pages d'inscription nécessitent le formulaire
+		// des coordonnées, exceptée la page "offrir" avec étape 3.
+		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
+			
+			// créer l'organisation
+			if (_request('organisation')) {
+				vprofils_creer_organisation($id_contact);
+			}
+			
+			// adresse et liaison avec l'auteur
+			include_spip('inc/actions');
+			include_spip('inc/editer');
+			$res = formulaires_editer_objet_traiter('adresse', 'new', $id_parent = '', $lier_trad = '', $retour = '', $config_fonc = '', $row = array(), $hidden = '');
+			
+			if ($res['id_adresse']) {
+				objet_associer(array('adresse' => $res['id_adresse']), array('auteur' => $id_auteur), array('type' => 'livraison'));
+			}
 		}
 		
 		// lien vers page d'identification
-		//
 		$self = _request('self');
+		
+		// TODO: vrai dans les tous cas ?
 		$url = parametre_url($self, 'form', 'identification');
 
-		
 		if (isset($flux['data']['message_ok'])) {
-			$flux['data']['message_ok'] = _T('vprofils:formulaire_message_ok_mail_confirmation', array('url' => $url));
+			$flux['data']['message_ok'] = _T('vprofils:message_ok_formulaire_inscription', array('url' => $url));
 		}
 	}
 	return $flux;
