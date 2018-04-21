@@ -14,7 +14,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_coordonnees_titre'              => "Vos coordonnées",
 	'formulaire_mail_label'                     => "Votre adresse e-mail",
 	'formulaire_mail_tiers_label'               => "Son adresse e-mail",
-	'formulaire_message_date_envoi_label'       => "Date à laquelle vous souhaitez informer le bénéficiaire de son cadeau",
+	'formulaire_message_date_envoi_label'       => "Date à laquelle vous souhaitez que Vacarme envoie un e-mail au  bénéficiaire pour l'informer de son cadeau.",
 	
 	'formulaire_message_ok_inscription_tiers'   => "Le bénéficiaire de votre cadeau est maintenant est faite",
 	'formulaire_message_texte_label'            => "Le message (par e-mail) que vous souhaitez envoyer au bénéficiaire",
@@ -36,12 +36,14 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	// I
 	'info_confirmer_passe' => 'Confirmer votre mot de passe',
+	'info_manquante_civilite' => 'votre civilité',
+	'info_manquante_prenom' => 'votre prénom',
 	
 	// M
-	'message_attention_compte_incomplet' => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
-	'message_erreur_formulaire_inscription_tiers' => "L'enregistrement des informations relatives au bénéficiaire de votre cadeau n'a pu être enregistré. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
-	'message_erreur_formulaire_inscription_tiers_email_deja' => "Cette personne est déjà inscrite sur notre site. Pour terminer votre commande, <a href='@url@' class='suite-lien'>veuillez nous contacter <em>&#8594;</em></a>",
+	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
+	'message_erreur_formulaire_inscription_tiers'                    => "L'enregistrement des informations relatives au bénéficiaire de votre cadeau n'a pu être enregistré. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
+	'message_erreur_formulaire_inscription_tiers_email_deja'         => "Cette personne est déjà inscrite sur notre site. Pour terminer votre commande, <a href='@url@' class='suite-lien'>veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_id_payeur_manquant' => "Votre commande ne peut être enregistrée. <a href='@url@' class='suite-lien'>Veuillez recommencer <em>&#8594;</em></a>",
-	'message_ok_formulaire_inscription'   => "Votre compte est créé. Un e-mail de confirmation vous a été également envoyé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
-	'message_ok_formulaire_inscription_tiers'   => "Les informations relatives au bénéficiaire sont bien enregistrées",
+	'message_ok_formulaire_inscription'                              => "Votre compte est créé. Un e-mail de confirmation vous a été également envoyé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
+	'message_ok_formulaire_inscription_tiers'                        => "Les informations relatives au bénéficiaire sont bien enregistrées",
 );

@@ -125,7 +125,7 @@ function vprofils_formulaire_verifier($flux) {
 		// Pour les coordonnées
 		//  ************************
 
-	  	$page = _request('page');
+		$page = _request('page');
 		$etape = _request('etape');
 		$obligatoire = array();
 		
@@ -147,16 +147,11 @@ function vprofils_formulaire_verifier($flux) {
 			}
 		}
 		
+		
+		
+		
 	}
-	
-	// if ($flux['args']['form'] == 'login'){
-	// 	$statut = sql_getfetsel('statut', 'spip_auteurs', 'login='.sql_quote(_request('var_login')).' OR email=' .sql_quote(_request('var_login')) );
-	// 
-	// 	// if ($statut == 'nouveau'){
-	// 	// 	$flux['data']['message_erreur'] = _T('inscriptionmotdepasse:erreur_email_non_confirme');
-	// 	// }
-	// }
-	
+
 	return $flux;
 }
 
@@ -221,7 +216,8 @@ function vprofils_formulaire_traiter($flux) {
 				// le formulaire de login boucle sur la page courante.
 				// 
 				// Si tout est ok au niveau du contact,
-				// et si page publique et si une étape est dans l'environnement,
+				// et si la page est publique 
+				// et si une étape est dans l'environnement,
 				// on peut alors rediriger sur l'étape suivante.
 				// 
 				if (is_url_prive($cible) == false AND $etape AND intval($etape)) {
@@ -242,15 +238,19 @@ function vprofils_formulaire_traiter($flux) {
 	// éventuellement l'organisation, et les coordonnées postales.
 	// 
 	if ($flux['args']['form'] == 'inscription') {
-		include_spip('inc/vprofils');
 		
-		$id_auteur = $flux['data']['id_auteur'];
+		$id_auteur = intval($flux['data']['id_auteur']);
+		$page = _request('page');
+		$etape = _request('etape');
+		
+		include_spip('inc/vprofils');
 		
 		// récupérer ou créer le contact
 		$id_contact = vprofils_creer_contact($id_auteur);
 		
-		$page = _request('page');
-		$etape = _request('etape');
+		// Vérifier si l'auteur n'existe pas déjà comme auteur Vacarme
+		// et le noter dans les logs pour un éventuel traitement ultérieur du doublon ?
+		vprofils_verifier_doublons($id_contact);
 		
 		// Toutes les pages d'inscription nécessitent le formulaire
 		// des coordonnées, exceptée la page "offrir" avec étape 3.
@@ -264,7 +264,7 @@ function vprofils_formulaire_traiter($flux) {
 			// adresse et liaison avec l'auteur
 			include_spip('inc/actions');
 			include_spip('inc/editer');
-			$res = formulaires_editer_objet_traiter('adresse', 'new', $id_parent = '', $lier_trad = '', $retour = '', $config_fonc = '', $row = array(), $hidden = '');
+			$res = formulaires_editer_objet_traiter('adresse', 'new');
 			
 			if ($res['id_adresse']) {
 				objet_associer(array('adresse' => $res['id_adresse']), array('auteur' => $id_auteur), array('type' => 'livraison'));
