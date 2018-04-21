@@ -25,5 +25,8 @@ function formulaires_actualiser_profil_verifier_dist($id_contact = 'new', $redir
 
 function formulaires_actualiser_profil_traiter_dist($id_contact = 'new', $redirect = '') {
 	$res = formulaires_editer_objet_traiter('contact', $id_contact, '', '', $redirect, '');
+	if ($res['id_contact'] AND $res['message_ok'] AND $redirect) {
+		$res['redirect'] = $redirect;
+	}
 	return $res;
 }
