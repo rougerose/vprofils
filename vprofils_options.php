@@ -4,7 +4,17 @@ if (!defined("_ECRIRE_INC_VERSION")) {
     return;
 }
 
+
+if (!defined('_ADRESSE_TYPE_DEFAUT')) {
+	define('_ADRESSE_TYPE_DEFAUT', 'pref'); // principale
+}
+
+
+// 
+// Formulaires et nospam
+// 
 $GLOBALS['formulaires_no_spam'][] = 'inscription_tiers';
+
 
 
 /**

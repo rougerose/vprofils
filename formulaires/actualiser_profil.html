@@ -11,6 +11,8 @@
 						monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
 				[(#SAISIE{input, nom, label=<:vprofils:formulaire_nom_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
 				[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+				[(#SAISIE{email, email, class='c-form__champ c-inscription__champ',
+					label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]
 			</div>
 			<p class="boutons"><input type="submit" class="submit c-btn c-btn--submit c-btn--extended c-btn--round c-btn--upper c-inscription__btn u-typo-font-vacarme" value="<:bouton_valider:>" /></p>
 		</form>

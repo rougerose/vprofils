@@ -29,19 +29,19 @@ function vprofils_formulaire_fond($flux){
 			$flux['data']
 		);
 
-		$page = _request('page');
-		$etape  = _request('etape');
-		
-		// Toutes les pages d'inscription nécessitent le formulaire
-		// des coordonnées, exceptée la page "offrir" avec étape 3.
-		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
-			$coordonnees = recuperer_fond('formulaires/inc-inscription-coordonnees', $flux['args']['contexte']);
-			$marque = '<!-- coordonnees -->';
-			
-			if (($html = strpos($flux['data'], $marque)) !== false) {
-				$flux['data'] = substr_replace($flux['data'], $coordonnees, $html + strlen($marque), 0);
-			}
-		}
+		// $page = _request('page');
+		// $etape  = _request('etape');
+		// 
+		// // Toutes les pages d'inscription nécessitent le formulaire
+		// // des coordonnées, exceptée la page "offrir" avec étape 3.
+		// if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
+		// 	$coordonnees = recuperer_fond('formulaires/inc-inscription-coordonnees', $flux['args']['contexte']);
+		// 	$marque = '<!-- coordonnees -->';
+		// 
+		// 	if (($html = strpos($flux['data'], $marque)) !== false) {
+		// 		$flux['data'] = substr_replace($flux['data'], $coordonnees, $html + strlen($marque), 0);
+		// 	}
+		// }
 	}
 	return $flux;
 }
@@ -50,16 +50,16 @@ function vprofils_formulaire_fond($flux){
 /**
  * Formulaire d'inscription
  *
- * chargemennt des saisies supplémentaires pour l'inscription
- * d'un abonné.
+ * chargement des saisies supplémentaires pour l'inscription d'un abonné.
  *
  * @param  array $flux
  * @return array
  */
 function vprofils_formulaire_charger($flux) {
 	if ($flux['args']['form'] == 'inscription' and $flux['data'] != false) {
-		$page = _request('page');
-		$etape = _request('etape');
+		
+		// $page = _request('page');
+		// $etape = _request('etape');
 		
 		// les saisies supplémentaires
 		$flux['data']['civilite'] = '';
@@ -69,17 +69,17 @@ function vprofils_formulaire_charger($flux) {
 		
 		// Toutes les pages d'inscription nécessitent le formulaire
 		// des coordonnées, exceptée la page "offrir" avec étape 3.
-		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
-			$flux['data']['type_organisation'] = '';
-			$flux['data']['organisation'] = '';
-			$flux['data']['voie'] = '';
-			$flux['data']['complement'] = '';
-			$flux['data']['boite_postale'] = '';
-			$flux['data']['code_postal'] = '';
-			$flux['data']['ville'] = '';
-			$flux['data']['region'] = '';
-			$flux['data']['pays'] = '';
-		}
+		// if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
+		// 	$flux['data']['type_organisation'] = '';
+		// 	$flux['data']['organisation'] = '';
+		// 	$flux['data']['voie'] = '';
+		// 	$flux['data']['complement'] = '';
+		// 	$flux['data']['boite_postale'] = '';
+		// 	$flux['data']['code_postal'] = '';
+		// 	$flux['data']['ville'] = '';
+		// 	$flux['data']['region'] = '';
+		// 	$flux['data']['pays'] = '';
+		// }
 	}
 	
 	return $flux;
@@ -127,29 +127,36 @@ function vprofils_formulaire_verifier($flux) {
 
 		$page = _request('page');
 		$etape = _request('etape');
-		$obligatoire = array();
 		
-		$obligatoire['civilite'] = _request('civilite');
-		$obligatoire['prenom'] = _request('prenom');
+		$obligatoires = array();
+		$obligatoires = array('civilite', 'nom', 'prenom', 'email');
 		
-		// Toutes les pages d'inscription nécessitent le formulaire
-		// des coordonnées, exceptée la page "offrir" avec étape 3.
-		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
-			$obligatoire['voie'] = _request('voie');
-			$obligatoire['code_postal'] = _request('code_postal');
-			$obligatoire['ville'] = _request('ville');
-			$obligatoire['pays'] = _request('pays');
-		}
+		/*
+		si inscription + adresse
+		$obligatoires_adresse = array('voie', 'code_postal', 'ville', 'pays');
+		$obligatoires = array_merge($obligatoires, $obligatoires_adresse);
+		 */
 		
-		foreach ($obligatoire as $champ => $valeur) {
-			if (!$valeur) {
-				$flux['data'][$champ] = _T('info_obligatoire');
+		foreach ($obligatoires as $obligatoire) {
+			if (!strlen(_request($obligatoire))) {
+				$erreurs[$obligatoire] = _T('vprofils:erreur_' . $obligatoire . '_obligatoire');
 			}
 		}
 		
+		// Toutes les pages d'inscription nécessitent le formulaire
+		// des coordonnées, exceptée la page "offrir" avec étape 3.
+		// if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
+		// 	$obligatoire['voie'] = _request('voie');
+		// 	$obligatoire['code_postal'] = _request('code_postal');
+		// 	$obligatoire['ville'] = _request('ville');
+		// 	$obligatoire['pays'] = _request('pays');
+		// }
 		
-		
-		
+		// foreach ($obligatoire as $champ => $valeur) {
+		// 	if (!$valeur) {
+		// 		$flux['data'][$champ] = _T('info_obligatoire');
+		// 	}
+		// }
 	}
 
 	return $flux;
@@ -240,12 +247,12 @@ function vprofils_formulaire_traiter($flux) {
 	if ($flux['args']['form'] == 'inscription') {
 		
 		$id_auteur = intval($flux['data']['id_auteur']);
-		$page = _request('page');
-		$etape = _request('etape');
+		// $page = _request('page');
+		// $etape = _request('etape');
 		
 		include_spip('inc/vprofils');
 		
-		// récupérer ou créer le contact
+		// créer ou récupérer le contact
 		$id_contact = vprofils_creer_contact($id_auteur);
 		
 		// Vérifier si l'auteur n'existe pas déjà comme auteur Vacarme
@@ -254,22 +261,22 @@ function vprofils_formulaire_traiter($flux) {
 		
 		// Toutes les pages d'inscription nécessitent le formulaire
 		// des coordonnées, exceptée la page "offrir" avec étape 3.
-		if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
-			
-			// créer l'organisation
-			if (_request('organisation')) {
-				vprofils_creer_organisation($id_contact);
-			}
-			
-			// adresse et liaison avec l'auteur
-			include_spip('inc/actions');
-			include_spip('inc/editer');
-			$res = formulaires_editer_objet_traiter('adresse', 'new');
-			
-			if ($res['id_adresse']) {
-				objet_associer(array('adresse' => $res['id_adresse']), array('auteur' => $id_auteur), array('type' => 'livraison'));
-			}
-		}
+		// if (isset($etape) AND $etape != 3 AND $page == 'offrir') {
+		// 
+		// 	// créer l'organisation
+		// 	if (_request('organisation')) {
+		// 		vprofils_creer_organisation($id_contact);
+		// 	}
+		// 
+		// 	// adresse et liaison avec l'auteur
+		// 	include_spip('inc/actions');
+		// 	include_spip('inc/editer');
+		// 	$res = formulaires_editer_objet_traiter('adresse', 'new');
+		// 
+		// 	if ($res['id_adresse']) {
+		// 		objet_associer(array('adresse' => $res['id_adresse']), array('auteur' => $id_auteur), array('type' => 'livraison'));
+		// 	}
+		// }
 		
 		// lien vers page d'identification
 		$self = _request('self');

@@ -3,6 +3,18 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
+	// E
+	'erreur_civilite_obligatoire' => "Monsieur ou Madame ?",
+	'erreur_code_postal_obligatoire' => "Votre code postal est une nécessité",
+	'erreur_email_doublon' => "Votre adresse e-mail est déjà enregistrée",
+	'erreur_email_invalide' => "Votre adresse e-mail n'est pas utilisable",
+	'erreur_email_obligatoire' => "Votre adresse e-mail est nécessaire pour vous joindre",
+	'erreur_nom_obligatoire' => "Veuillez indiquer votre nom",
+	'erreur_pays_obligatoire' => "Nous avons besoin de connaître votre pays, nous ne décidons pas (encore) des frais d'affranchissement",
+	'erreur_prenom_obligatoire' => "Veuillez indiquer votre prénom",
+	'erreur_ville_obligatoire' => "Vous habitez nulle part ?",
+	'erreur_voie_obligatoire' => "Votre adresse permettra de vous envoyer vos exemplaires",
+	
 	// F
 	'formulaire_boite_postale_label'            => "Boîte postale",
 	'formulaire_civilite_label'                 => "Civilité",
@@ -10,7 +22,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_civilite_monsieur_label'        => "Monsieur",
 	'formulaire_code_postal_label'              => "Code postal",
 	'formulaire_complement_label'               => "Complément d'adresse",
-	'formulaire_compte_titre'                   => "Votre compte",
+	'formulaire_compte_titre'                   => "Vos informations personnelles",
 	'formulaire_coordonnees_titre'              => "Vos coordonnées",
 	'formulaire_mail_label'                     => "Votre adresse e-mail",
 	'formulaire_mail_tiers_label'               => "Son adresse e-mail",
@@ -19,6 +31,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_message_ok_inscription_tiers'   => "Le bénéficiaire de votre cadeau est maintenant est faite",
 	'formulaire_message_texte_label'            => "Le message (par e-mail) que vous souhaitez envoyer au bénéficiaire",
 	'formulaire_nom_label'                      => "Votre nom",
+	'formulaire_nom_organisation_label'         => "Le nom de l'entreprise, de l'association ou de l'institution",
 	'formulaire_nom_tiers_label'                => "Son nom",
 	'formulaire_organisation_label'             => "Société, association ou organisation",
 	'formulaire_pays_label'                     => "Pays",
@@ -37,6 +50,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// I
 	'info_confirmer_passe' => 'Confirmer votre mot de passe',
 	'info_manquante_civilite' => 'votre civilité',
+	'info_manquante_email' => 'votre adresse e-mail',
 	'info_manquante_prenom' => 'votre prénom',
 	
 	// M
