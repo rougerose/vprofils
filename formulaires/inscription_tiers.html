@@ -1,34 +1,52 @@
-<div class="formulaire_spip formulaire_inscription c-form c-inscription ajax" id="formulaire_inscription">
-	[<p class="reponse_formulaire reponse_formulaire_ok c-message c-message--ok">(#ENV*{message_ok})</p>]
-	[<p class="reponse_formulaire reponse_formulaire_erreur c-message c-message--erreur">(#ENV*{message_erreur})</p>]
+<div class="formulaire_spip formulaire_inscription">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 	[(#ENV{editable})
-		<form method="post" action="#ENV{action}" class="c-inscription__form">
+		<form method="post" action="#ENV{action}">
 			#ACTION_FORMULAIRE
 			[(#REM) ajouter bio en hidden, afin d'identifier cet auteur comme bénéficiaire d'un abonnement offert ]
 			[(#SAISIE{hidden, bio, defaut='abonnement_offert'})]
 			[(#SAISIE{hidden, id_payeur, defaut=#SESSION{id_auteur}})]
-			<div class="c-form__groupe c-inscription-groupe editer-groupe">
-				[(#SAISIE{radio, civilite, label=<:vprofils:formulaire_civilite_label:>, class='c-inscription__champ c-inscription__champ--radio c-inscription__champ--civilite', obligatoire=oui,
-					data=#ARRAY{
-						madame, <:vprofils:formulaire_civilite_madame_label:>,
-						monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
-				[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_tiers_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
-				[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_tiers_label:>, class='c-form__champ c-inscription__champ', obligatoire=oui})]
-				[(#SAISIE{email, mail_inscription, class='c-form__champ c-inscription__champ',
-					label=<:vprofils:formulaire_mail_tiers_label:>, obligatoire=oui})]
-
-				[(#SAISIE{input, organisation, label=<:vprofils:formulaire_organisation_label:>, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, voie, label=<:vprofils:formulaire_voie_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, complement, label=<:vprofils:formulaire_complement_label:>, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, boite_postale, label=<:vprofils:formulaire_boite_postale_label:>, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, code_postal, label=<:vprofils:formulaire_code_postal_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, ville, label=<:vprofils:formulaire_ville_label:>, obligatoire=oui, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{input, region, label=<:vprofils:formulaire_region_label:>, class='c-form__champ c-inscription__champ',})]
-				[(#SAISIE{pays, pays, label=<:vprofils:formulaire_pays_label:>, defaut=FR, obligatoire=non, code_pays=oui, class='c-form__champ c-inscription__champ'})]
-				[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, class='c-form__champ c-inscription__champ', rows=10})]
-				[(#SAISIE{message_date_envoi, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, class='c-form__champ c-inscription__champ', obligatoire=oui})]
+			<div class="formulaire__groupe formulaire__groupe--identite">
+				<fieldset>
+					<legend><:vprofils:formulaire_compte_tiers_titre:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{radio, civilite, label=<:vprofils:formulaire_civilite_label:>, obligatoire=oui,
+							data=#ARRAY{
+								madame, <:vprofils:formulaire_civilite_madame_label:>,
+								monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
+						[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_label:>, obligatoire=oui})]
+						[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, obligatoire=oui})]
+						[(#SAISIE{email, mail_inscription, label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]
+					</div>
+				</fieldset>
 			</div>
-			<p class="boutons"><input type="submit" class="submit c-btn c-btn--submit c-btn--extended c-btn--round c-btn--upper c-inscription__btn u-typo-font-vacarme" value="<:bouton_valider:>" /></p>
+			<div class="formulaire__groupe formulaire__groupe--adresse">
+				<fieldset>
+					<legend><:vprofils:formulaire_coordonnees_tiers_titre:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{input, organisation, label=<:vprofils:formulaire_organisation_label:>})]
+						[(#SAISIE{input, voie, label=<:vprofils:formulaire_voie_label:>, obligatoire=oui})]
+						[(#SAISIE{input, complement, label=<:vprofils:formulaire_complement_label:>})]
+						[(#SAISIE{input, boite_postale, label=<:vprofils:formulaire_boite_postale_label:>})]
+						[(#SAISIE{input, code_postal, label=<:vprofils:formulaire_code_postal_label:>, obligatoire=oui})]
+						[(#SAISIE{input, ville, label=<:vprofils:formulaire_ville_label:>, obligatoire=oui})]
+						[(#SAISIE{input, region, label=<:vprofils:formulaire_region_label:>})]
+						[(#SAISIE{pays, pays, label=<:vprofils:formulaire_pays_label:>, defaut=FR, obligatoire=oui, code_pays=oui})]
+					</div>
+				</fieldset>
+			</div>
+			<div class="formulaire__groupe">
+				<fieldset>
+					<div class="editer-groupe">
+						[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, rows=10})]
+						[(#SAISIE{message_date_envoi, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, obligatoire=oui})]
+					</div>
+				</fieldset>
+			</div>
+			<p class="boutons">
+				<input type="submit" class="submit" value="<:bouton_valider:>" />
+			</p>
 		</form>
 	]
 </div>
