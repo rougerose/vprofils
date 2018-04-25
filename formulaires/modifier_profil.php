@@ -1,7 +1,7 @@
 <?php
 
 if (!defined("_ECRIRE_INC_VERSION")) {
-    return;
+	return;
 }
 
 include_spip("base/abstract_sql");
@@ -290,9 +290,9 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '') {
 }
 
 function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
-	// if ($retour) {
-	// 	refuser_traiter_formulaire_ajax();
-	// }
+	if ($retour) {
+		refuser_traiter_formulaire_ajax();
+	}
 	
 	$res = array();
 	
@@ -344,6 +344,69 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 		$res_contact = formulaires_editer_objet_traiter('contact', intval($id_contact), 0, 0, $retour, '');
 		$res = array_merge($res, $res_contact);
 		
+		$organisation = _request('organisation');
+		$id_organisation_actuelle = sql_getfetsel('id_organisation', 'spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact'));
+		
+		//
+		// Si le champ Organisation est maintenant vide
+		// mais une organisation est liée au chargement du formulaire.
+		// 
+		if (!$organisation AND $id_organisation_actuelle) {
+			// 
+			// Dissocier l'organisation
+			// 
+			//include_spip('action/supprimer_lien');
+			$dissocier = charger_fonction("supprimer_lien","action");
+			$organisation_contact = "organisation-$id_organisation_actuelle-contact-$id_contact";
+			$dissocier($organisation_contact);
+		}
+		
+		
+		// 
+		// Si le champ Organisation est renseigné
+		// 
+		if ($organisation = _request('organisation')) {
+			
+			if ($id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation))) {
+				
+				if (!sql_countsel('spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact').' and id_organisation='.$id_organisation)) {
+					// 
+					// lier l'organisation
+					// 
+					include_spip('action/editer_liens');
+					objet_associer(array('organisation' => $id_organisation), array('contact' => $id_contact));
+				}
+				
+				$res['id_organisation'] = $id_organisation;
+				
+			} else {
+				//
+				// Modifier le champs Nom
+				// 
+				set_request('nom', $organisation);
+				
+				// 
+				// créer
+				// 
+				$res_organisation = formulaires_editer_objet_traiter('organisation', 'new', 0, 0, $retour, '');
+				
+				if ($res_organisation['id_organisation']) {
+					include_spip('action/editer_liens');
+					objet_associer(array('organisation' => $res_organisation['id_organisation']), array('contact' => $id_contact));
+				}
+				
+				//
+				// Rétablir le champs Nom de l'auteur
+				// 
+				set_request('nom', $nom);
+				
+				$res = array_merge($res, $res_organisation);
+			}
+		}
+		
+		//
+		// Si le champ Organisation est vide, mais 
+
 	} elseif ($type_client == 'organisation') {
 		
 		$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'id_auteur='.intval($id_auteur));
@@ -351,7 +414,8 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 		// 
 		// Modification des champs Organisation
 		// 
-		$res_organisation = formulaires_editer_objet_traiter('organisation', intval($id_organisation), 0, 0, $retour, '');
+		$res_organisation = formulaires_editer_objet_traiter('organisation', $id_organisation, 0, 0, $retour, '');
+		
 		$res = array_merge($res, $res_organisation);
 		
 	}
@@ -372,8 +436,10 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 		objet_associer(array('adresse' => $res_adresse['id_adresse']), array('auteur' => intval($id_auteur)), array('type' => _ADRESSE_TYPE_DEFAUT));
 	}
 	$res = array_merge($res, $res_adresse);
+
+	if ($retour) {
+		$res['redirect'] = $retour;
+	}
 	
-	$res['editable'] = true; // uniquement page compte > modifications infos ? 
-	
-	return $res;
+	return $resultat;
 }
