@@ -22,7 +22,6 @@ function vprofils_creer_contact($id_auteur) {
 	// Mettre à jour le contact avec les données du formulaire
 	if (intval($id_contact)) {
 		include_spip('action/editer_contact');
-		
 		$contact_set = array();
 		
 		// Données : prénom, civilite, 
@@ -45,20 +44,20 @@ function vprofils_creer_organisation($id_contact) {
 	// nom de l'organisation
 	$organisation = _request('organisation');
 	
-	// organisation déjà enregistrée ? 
-	$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation));
-
-	if (intval($id_organisation)) {
-		if ($id_lien = sql_getfetsel('id_organisation', 'spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact')) AND $id_lien == $id_organisation) {
-			return $id_organisation;
-		}
-	} else {
-		include_spip('action/editer_organisation');
-		$id_organisation = organisation_inserer();
-		$organisation_set = array();
-		$organisation_set['nom'] = _request('organisation');
-		organisation_modifier($id_organisation, $organisation_set);
+	// organisation déjà enregistrée et déjà liée au contact ?
+	if (
+		$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation))
+		AND sql_countsel('spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact').' and id_organisation='.$id_organisation)
+	) {
+		return $id_organisation;
 	}
+	
+	// sinon créer l'organisation
+	include_spip('action/editer_organisation');
+	$id_organisation = organisation_inserer();
+	$organisation_set = array();
+	$organisation_set['nom'] = _request('organisation');
+	organisation_modifier($id_organisation, $organisation_set);
 	
 	// lier l'organisation au contact
 	include_spip('action/editer_liens');
@@ -79,7 +78,36 @@ function vprofils_creer_organisation($id_contact) {
 function vprofils_verifier_doublons($id_contact) {
 	$contact = sql_fetsel('id_auteur, prenom, nom', 'spip_contacts', 'id_contact='.intval($id_contact));
 	$nom_prenom = mb_convert_case($contact['nom'].'*'.$contact['prenom'], MB_CASE_LOWER, "UTF-8");
-	$auteur_vacarme = sql_fetsel('id_auteur, nom', 'spip_auteurs', 'nom='.sql_quote($nom_prenom));
+	if ($auteurs = sql_allfetsel('id_auteur, nom', 'spip_auteurs', 'nom='.sql_quote($nom_prenom).' AND id_auteur!='.sql_quote(intval($contact['id_auteur'])))) {
+		foreach ($auteurs as $auteur) {
+			spip_log("Contact #$id_contact -- ".$contact['nom']." ".$contact['prenom']." -- est un doublon éventuel de l'auteur #".$auteur['id_auteur']." -- ".$auteur['nom']." -- ", "vprofils_auteurs_doublons"._LOG_INFO_IMPORTANTE);
+		}
+	}
+}
+
+
+/**
+ * Déterminer la variante du formulaire d'inscription.
+ *
+ * Le formulaire d'inscription est présenté selon deux variantes :
+ * une variante rapide avec uniquement Nom, mail, mot de passe
+ * et une variante complète avec les champs précédents + adresse.
+ * 
+ * Page :
+ *  - compte => inscription rapide
+ *  - offrir, étape 3 => inscription rapide
+ *  - abonner, étape 4 => inscription complète
+ *  - offrir, étape 4 => inscription complète (formulaire inscription_tiers : rien à voir ?)
+ *  
+ * @param  string $page $page$etape
+ * @return bool
+ */
+function vprofils_selectionner_formulaire_inscription($page) {
+	$pages_formulaire_complet = array('abonner4');
 	
-	spip_log("Contact #$id_contact (".$contact['nom']." ".$contact['prenom'].") est un doublon éventuel de l'auteur #".$auteur_vacarme['id_auteur']." (".$auteur_vacarme['nom'].")", "vprofils_auteurs_doublons"._LOG_INFO_IMPORTANTE);
+	if (in_array($page, $pages_formulaire_complet)) {
+		return true;
+	}
+	
+	return false;
 }
