@@ -42,32 +42,27 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 	include_spip('action/editer_auteur');
 	$envoyer_mail = true;
 	
+	// 
 	// Récupérer l'email pour retrouver l'identifiant de l'utilisateur
 	$email = $desc['email'];
 	
-	$password = _request('password');
-	
-	// Récupérer le formulaire et le champ Bio
+	// 
+	// Récupérer le nom du formulaire et le champ Bio
 	$form = _request('formulaire_action');
 	$bio = _request('bio');
 	
-	// Si tout s'est bien passé avant, SPIP a déjà créé l'auteur et lui a déjà donné un login et pass
+	// 
+	// Si tout s'est bien passé avant, SPIP a déjà créé l'auteur.
 	if ($user = sql_fetsel('*', 'spip_auteurs', 'email='.sql_quote($email))){
-		if ($password) {
-			// On modifie le mot de passe en utilisant les API de SPIP
-			auteur_instituer($user['id_auteur'], array('pass' => $password));
-			
-			// On modifie l'information de mot de passe
-			$desc['pass'] = $password;
-		}
 
+		// 
 		// Si l'inscription est celle du bénéficiaire d'un abonnement offert
 		if ($form == 'inscription_tiers' AND $bio == 'abonnement_offert') {
-			// date_d'envoi de la notification et date potentielle de départ
+			// Date d'envoi de la notification et date potentielle de départ
 			// de l'abonnement.
 			$date_envoi = _request('message_date');
 			
-			// le motif (abonnement_offert) et la date de départ d'abonnement
+			// Le motif (abonnement_offert) et la date de départ d'abonnement
 			// sont enregistrés provisoirement dans la bio de l'auteur
 			// bénéficiaire.
 			// TODO: effacer ces infos lors du traitement du paiement
@@ -77,10 +72,12 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 			// bénéficiaire, il faudra également s'assurer que cette date_debut
 			// est correcte à ce qu'il souhaite réellement. 
 			$bio = serialize(array($bio => array('date' => $date_envoi)));
+			
 			auteur_modifier($user['id_auteur'], array('bio' => $bio));
 			
-			// la notification par mail de l'inscription ne doit pas lui
-			// être envoyée
+			// 
+			// La notification par mail de l'inscription ne doit pas lui
+			// être envoyée tout de suite. 
 			$envoyer_mail = false;
 		}
 	}

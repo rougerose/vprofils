@@ -31,7 +31,7 @@ function formulaires_inscription_tiers_charger_dist($statut='6forum', $retour=''
 
 function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='') {
 	
-	$inscription_verifier = charger_fonction("verifier","formulaires/inscription");
+	$inscription_verifier = charger_fonction("verifier", "formulaires/inscription");
 	$erreurs = $inscription_verifier($statut);
 	
 	$id_payeur = _request('id_payeur');
@@ -50,21 +50,14 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 		spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard, l'adresse email $mail_beneficiaire est déjà enregistrée.", 'vprofils'._LOG_ERREUR);
 	}
 	
-	$obligatoire = array();
-	$obligatoire['civilite'] = _request('civilite');
-	$obligatoire['prenom'] = _request('prenom');
-	$obligatoire['voie'] = _request('voie');
-	$obligatoire['code_postal'] = _request('code_postal');
-	$obligatoire['ville'] = _request('ville');
-	$obligatoire['pays'] = _request('pays');
-	$obligatoire['message_date'] = _request('message_date');
+	$obligatoires = array('civilite', 'prenom', 'voie', 'code_postal', 'ville', 'pays', 'message_date');
 	
-	foreach ($obligatoire as $champ => $valeur) {
-		if (!$valeur) {
-			$erreurs[$champ] = _T('info_obligatoire');
+	foreach ($obligatoires as $obligatoire) {
+		if (!strlen(_request($obligatoire))) {
+			$erreurs[$obligatoire] = _T('vprofils:erreur_' . $obligatoire . '_obligatoire');
 		}
 	}
-		
+	
 	return $erreurs;
 }
 
@@ -78,16 +71,45 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	$id_payeur = _request('id_payeur');
 	
 	// enregistrer contact et coordonnées
-	if (isset($id_auteur)) {
+	if ($id_auteur) {
+		
 		include_spip('inc/vprofils');
 		
 		// récupérer ou créer le contact
 		$id_contact = vprofils_creer_contact($id_auteur);
+		$res['id_contact'] = $id_contact;
+		
+		// rectifier des données de l'auteur : 
+		// - login = e-mail
+		// - nom = Nom*Prénom
+		$prenom = _request('prenom');
+		$nom = _request('nom_inscription');
+		$nom_prenom = $nom.'*'.$prenom;
+		$mail = _request('mail_inscription');
+		
+		// autoriser la modification de l'auteur
+		include_spip('inc/autoriser');
+		autoriser_exception('modifier', 'auteur', $id_auteur);
+		
+		// modifier les données de l'auteur
+		include_spip('action/editer_auteur');
+		$err = auteur_modifier($id_auteur, array(
+			'nom' => $nom_prenom,
+			'login' => $mail
+		));
+		// retirer l'autorisation exceptionnelle
+		autoriser_exception('modifier', 'auteur', $id_auteur, false);
+		
+		// Vérifier si l'auteur n'existe pas déjà comme auteur Vacarme
+		// et le noter dans les logs pour un éventuel traitement ultérieur du doublon ?
+		vprofils_verifier_doublons($id_contact);
 		
 		// créer l'organisation
 		if (_request('organisation')) {
-			vprofils_creer_organisation($id_contact);
+			$id_organisation = vprofils_creer_organisation($id_contact);
 		}
+		
+		$res['id_organisation'] = $id_organisation;
 		
 		// adresse et liaison avec l'auteur
 		include_spip('inc/editer');
@@ -97,6 +119,8 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 		if (isset($adresse['id_adresse'])) {
 			include_spip('action/editer_liens');
 			objet_associer(array('adresse' => $adresse['id_adresse']), array('auteur' => $id_auteur), array('type' => 'livraison'));
+			
+			$res['id_adresse'] = $adresse['id_adresse'];
 		}
 		
 		// message et date d'envoi. 
@@ -116,7 +140,7 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 				'rv' => 'non',
 				'statut' => 'prepa',
 				'id_auteur' => $id_payeur,
-				'destinataires' => $id_payeur)
+				'destinataires' => $id_auteur)
 			);
 		}
 		

@@ -9,6 +9,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'erreur_email_doublon' => "Votre adresse e-mail est déjà enregistrée",
 	'erreur_email_invalide' => "Votre adresse e-mail n'est pas utilisable",
 	'erreur_email_obligatoire' => "Votre adresse e-mail est nécessaire pour vous joindre",
+	'erreur_message_date_obligatoire' => "La date d'envoi est obligatoire",
 	'erreur_nom_obligatoire' => "Veuillez indiquer votre nom",
 	'erreur_pays_obligatoire' => "Nous avons besoin de connaître votre pays de résidence",
 	'erreur_prenom_obligatoire' => "Votre prénom",
