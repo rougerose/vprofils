@@ -48,10 +48,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_voie_label'                     => "Adresse",
 	
 	// I
-	'info_confirmer_passe' => 'Confirmer votre mot de passe',
-	'info_manquante_civilite' => 'votre civilité',
-	'info_manquante_email' => 'votre adresse e-mail',
-	'info_manquante_prenom' => 'votre prénom',
+	'info_manquante_adresse'     => 'vos coordonnées',
+	'info_manquante_civilite'    => 'votre civilité',
+	'info_manquante_code_postal' => 'votre code postal',
+	'info_manquante_email'       => 'votre adresse e-mail',
+	'info_confirmer_passe'       => 'Confirmer votre mot de passe',
+	'info_manquante_pays'        => 'votre pays',
+	'info_manquante_prenom'      => 'votre prénom',
+	'info_manquante_ville'       => 'votre ville',
+	'info_manquante_voie'        => 'votre adresse',
 	
 	// M
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
