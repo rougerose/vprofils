@@ -1,12 +1,38 @@
+[(#REM)
+	<!-- 
+		Identifier l'abonnement offert. S'il en existe plusieurs dans le panier,
+		le formulaire demande au payeur de désigner explicitement l'abonnement.
+	-->
+]#SET{id_abonnements_offre, #ARRAY}
+<BOUCLE_panier(spip_paniers_liens){id_panier=#SESSION{id_panier}}{objet=abonnements_offre}>
+	<BOUCLE_titre(ABONNEMENTS_OFFRES){id_abonnements_offre=#ID_OBJET}>
+	[(#SET{titre, [(#TITRE)[ / (#DUREE|numeros_nombre_en_clair)][ / (#PRIX)]]})]
+	</BOUCLE_titre>
+	[(#TOTAL_BOUCLE|>={1}|?{
+		[(#SET{id_abonnements_offre, #GET{id_abonnements_offre}|push{#ID_OBJET}})],
+		[(#OPTIONS|table_valeur{coupon}|oui)
+			[(#SET{id_abonnements_offre, #GET{id_abonnements_offre}|plus{#ARRAY{#ID_OBJET, #GET{titre}}} })]]
+	})]
+</BOUCLE_panier>
+
 <div class="formulaire_spip formulaire_inscription">
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 	[(#ENV{editable})
 		<form method="post" action="#ENV{action}">
 			#ACTION_FORMULAIRE
-			[(#REM) ajouter bio en hidden, afin d'identifier cet auteur comme bénéficiaire d'un abonnement offert ]
-			[(#SAISIE{hidden, bio, defaut='abonnement_offert'})]
+			[(#REM) 
+			<!-- 
+				ajouter pgp en hidden, ce champ permettra de stocker 
+				- provisoirement - l'identification de cet auteur 
+				comme bénéficiaire d'un abonnement offert,
+				ainsi que la date d'envoi souhaitée par le payeur.
+			-->]
+			[(#SAISIE{hidden, options_abonnement, defaut='abonnement_offert'})]
 			[(#SAISIE{hidden, id_payeur, defaut=#SESSION{id_auteur}})]
+			[(#GET{id_abonnements_offre}|count|>{1}|non)
+				[(#SAISIE{hidden, id_abonnements_offre, defaut=#GET{id_abonnements_offre}|table_valeur{0}})]
+			]
 			<div class="formulaire__groupe formulaire__groupe--identite">
 				<fieldset>
 					<legend><:vprofils:formulaire_compte_tiers_titre:></legend>
@@ -44,6 +70,9 @@
 					</div>
 				</fieldset>
 			</div>
+			[(#GET{id_abonnements_offre}|count|>{1}|oui)
+				[(#INCLURE{fond=formulaires/inc-inscription_tiers_abonnements, id_abonnements_offre=#GET{id_abonnements_offre}, env})]
+			]
 			<p class="boutons">
 				<input type="submit" class="submit" value="<:bouton_valider:>" />
 			</p>

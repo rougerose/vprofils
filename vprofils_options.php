@@ -47,9 +47,9 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 	$email = $desc['email'];
 	
 	// 
-	// Récupérer le nom du formulaire et le champ Bio
+	// Récupérer le nom du formulaire et le champ pgp d'identification du bénéficiaire
 	$form = _request('formulaire_action');
-	$bio = _request('bio');
+	$options_abo = _request('options_abonnement');
 	
 	// 
 	// Si tout s'est bien passé avant, SPIP a déjà créé l'auteur.
@@ -57,7 +57,7 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 
 		// 
 		// Si l'inscription est celle du bénéficiaire d'un abonnement offert
-		if ($form == 'inscription_tiers' AND $bio == 'abonnement_offert') {
+		if ($form == 'inscription_tiers' AND $options_abo == 'abonnement_offert') {
 			// Date d'envoi de la notification et date potentielle de départ
 			// de l'abonnement.
 			$date_envoi = _request('message_date');
@@ -71,9 +71,10 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 			// Lors du traitement de la confirmation d'abonnement par le
 			// bénéficiaire, il faudra également s'assurer que cette date_debut
 			// est correcte à ce qu'il souhaite réellement. 
-			$bio = serialize(array($bio => array('date' => $date_envoi)));
+
+			$options_abo = serialize(array('abonnement_offert_date' => $date_envoi));
 			
-			auteur_modifier($user['id_auteur'], array('bio' => $bio));
+			auteur_modifier($user['id_auteur'], array('pgp' => $options_abo));
 			
 			// 
 			// La notification par mail de l'inscription ne doit pas lui
