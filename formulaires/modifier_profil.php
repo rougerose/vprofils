@@ -7,6 +7,8 @@ if (!defined("_ECRIRE_INC_VERSION")) {
 include_spip("base/abstract_sql");
 include_spip('inc/editer');
 
+
+
 function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '') {
 	// 
 	// L'auteur est enregistré comme contact ou organisation ?
@@ -239,6 +241,8 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '') {
 	return $valeurs;
 }
 
+
+
 function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '') {
 	$erreurs = array();
 	$type_client = _request('type_client');
@@ -288,6 +292,8 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '') {
 	
 	return $erreurs;
 }
+
+
 
 function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 	if ($retour) {
@@ -404,9 +410,6 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 			}
 		}
 		
-		//
-		// Si le champ Organisation est vide, mais 
-
 	} elseif ($type_client == 'organisation') {
 		
 		$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'id_auteur='.intval($id_auteur));
