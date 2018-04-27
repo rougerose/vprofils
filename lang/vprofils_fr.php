@@ -21,9 +21,11 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_civilite_label'           => "Civilité",
 	'formulaire_civilite_madame_label'    => "Madame",
 	'formulaire_civilite_monsieur_label'  => "Monsieur",
+	'formulaire_choixabo_label'  => "Veuillez choisir un abonnement parmi ceux enregistrés dans votre commande",
 	'formulaire_code_postal_label'        => "Code postal",
 	'formulaire_complement_label'         => "Complément d'adresse",
 	'formulaire_compte_titre'             => "Vos informations personnelles",
+	'formulaire_compte_tiers_choixabo_titre'       => "Quel abonnement souhaitez-vous offrir ?",
 	'formulaire_compte_tiers_titre'       => "Ses informations personnelles",
 	'formulaire_coordonnees_titre'        => "Vos coordonnées",
 	'formulaire_coordonnees_tiers_titre'  => "Ses coordonnées",
@@ -52,15 +54,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	// I
 	// TODO: à supprimer ?
-	// 'info_manquante_adresse'     => 'vos coordonnées',
-	// 'info_manquante_civilite'    => 'votre civilité',
-	// 'info_manquante_code_postal' => 'votre code postal',
-	// 'info_manquante_email'       => 'votre adresse e-mail',
-	// 'info_confirmer_passe'       => 'Confirmer votre mot de passe',
-	// 'info_manquante_pays'        => 'votre pays',
-	// 'info_manquante_prenom'      => 'votre prénom',
-	// 'info_manquante_ville'       => 'votre ville',
-	// 'info_manquante_voie'        => 'votre adresse',
+	'info_manquante_adresse'     => 'vos coordonnées',
+	'info_manquante_civilite'    => 'votre civilité',
+	'info_manquante_code_postal' => 'votre code postal',
+	'info_manquante_email'       => 'votre adresse e-mail',
+	'info_confirmer_passe'       => 'confirmer votre mot de passe',
+	'info_manquante_pays'        => 'votre pays',
+	'info_manquante_prenom'      => 'votre prénom',
+	'info_manquante_ville'       => 'votre ville',
+	'info_manquante_voie'        => 'votre adresse',
 	
 	// M
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
