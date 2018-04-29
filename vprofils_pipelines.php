@@ -175,8 +175,9 @@ function vprofils_formulaire_traiter($flux) {
 	if ($flux['args']['form'] == 'login') {
 		
 		include_spip('inc/vprofils');
+		include_spip('inc/session');
 
-		$id_auteur = $GLOBALS['auteur_session']['id_auteur'];
+		$id_auteur = $GLOBALS['visiteur_session']['id_auteur'];
 		
 		if ($id_auteur) {
 			$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur));
