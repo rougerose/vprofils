@@ -7,9 +7,8 @@ if (!defined("_ECRIRE_INC_VERSION")) {
 
 function formulaires_inscription_tiers_charger_dist($statut='6forum', $retour='') {
 	$valeurs = array(
-		'id_abonnements_offre' => '',
+		'_id_abonnement' => '',
 		'id_payeur' => '',
-		'options_abonnement' => '',
 		'civilite' => '',
 		'nom_inscription' => '',
 		'prenom' => '',
@@ -25,7 +24,6 @@ function formulaires_inscription_tiers_charger_dist($statut='6forum', $retour=''
 		'texte_message' => '',
 		'date_message' => ''
 	);
-	
 	return $valeurs;
 }
 
@@ -35,7 +33,7 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 	$inscription_verifier = charger_fonction("verifier", "formulaires/inscription");
 	$erreurs = $inscription_verifier($statut);
 	
-	$id_abonnements_offre = _request('id_abonnements_offre');
+	$id_abonnements_offre = _request('_id_abonnements_offre');
 	$id_payeur = _request('id_payeur');
 	
 	if (is_null($id_payeur)) {
@@ -52,7 +50,7 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 		spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard, l'adresse email $mail_beneficiaire est déjà enregistrée.", 'vprofils'._LOG_ERREUR);
 	}
 	
-	$obligatoires = array('civilite', 'id_abonnements_offre', 'prenom', 'voie', 'code_postal', 'ville', 'pays', 'message_date');
+	$obligatoires = array('civilite', '_id_abonnement', 'prenom', 'voie', 'code_postal', 'ville', 'pays', 'message_date');
 	
 	foreach ($obligatoires as $obligatoire) {
 		if (!strlen(_request($obligatoire))) {
@@ -146,24 +144,30 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 			);
 		}
 		
+		// 
 		// Modifier le panier.
-		// Au niveau de l'article contenant l'abonnement offert,
+		// Au niveau de l'item contenant l'abonnement offert,
 		// la valeur de l'option coupon (oui) est modifiée pour contenir l'id_auteur
 		// du bénéficiaire.
 		// 
 		include_spip('inc/paniers');
 		$id_panier = paniers_id_panier_encours();
 
+		// 
 		// id de l'offre abonnement concernée par le cadeau
-		$id_abonnements_offre = _request('id_abonnements_offre');
+		// 
+		$ids = _request('_id_abonnement');
+		@list($id_objet, $cle) = explode('-', $ids);
 		
-		$panier = sql_fetsel('id_objet, options', 'spip_paniers_liens', 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_abonnements_offre);
+		
+		$panier = sql_fetsel('id_objet, options', 'spip_paniers_liens', 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
 
 		$options = unserialize($panier['options']);
 
-		if ($options['coupon'] == 'oui') {
-			$options['coupon'] = $id_auteur;
-			sql_updateq('spip_paniers_liens', array('options' => serialize($options)), 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_abonnements_offre);
+		if ($options[$cle][0] == 'oui') {
+			$options[$cle][0] = $id_auteur;
+			
+			sql_updateq('spip_paniers_liens', array('options' => serialize($options)), 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
 		}
 		
 		$res['message_ok'] = _T('vprofils:message_ok_formulaire_inscription_tiers');

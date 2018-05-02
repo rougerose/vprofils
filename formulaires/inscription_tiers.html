@@ -3,18 +3,25 @@
 		Identifier l'abonnement offert. S'il en existe plusieurs dans le panier,
 		le formulaire demande au payeur de désigner explicitement l'abonnement.
 	-->
-]#SET{id_abonnements_offerts, #ARRAY}
-#SET{id_abonnements_offres, #ARRAY}
+]
+#SET{_id_abonnement, #ARRAY}
+#SET{_id_abonnements, #ARRAY}
 <BOUCLE_panier(spip_paniers_liens){id_panier=#SESSION{id_panier}}{objet=abonnements_offre}>
-	<BOUCLE_titre(ABONNEMENTS_OFFRES){id_abonnements_offre=#ID_OBJET}>
-		[(#SET{titre, [(#TITRE)[ / (#DUREE|numeros_nombre_en_clair)][ / (#PRIX)]]})]
-	</BOUCLE_titre>
-	[(#OPTIONS|table_valeur{coupon}|oui)
-		[(#SET{id_abonnements_offerts, #GET{id_abonnements_offerts}|plus{#ARRAY{#ID_OBJET, #GET{titre}}} })]
-		[(#SET{id_abonnements_offres, #GET{id_abonnements_offres}|push{#ID_OBJET}})]
-	]
+	#SET{options, #OPTIONS}
+	<BOUCLE_options(DATA){source table, #GET{options}}>
+		[(#SET{cle, #COMPTEUR_BOUCLE|moins{1}})]
+		[(#SET{opt_coupon, #OPTIONS|table_valeur{#GET{cle}}|table_valeur{0}})]
+		<BOUCLE_titre(ABONNEMENTS_OFFRES){id_abonnements_offre=#ID_OBJET}{si #GET{opt_coupon}|=={oui}}>
+			[(#SET{titre, [(#TITRE)[ / (#DUREE|numeros_nombre_en_clair)][ / (#PRIX)]]})]
+			[(#GET{opt_coupon}|=={oui}|oui)
+				[(#SET{id, [(#ID_OBJET)-[(#GET{cle})]]})]
+				[(#SET{_id_abonnements, #GET{_id_abonnements}|plus{#ARRAY{#GET{id}, #GET{titre}}}})]
+				[(#SET{_id_abonnement, #GET{_id_abonnement}|push{#GET{id}}})]
+			]
+		</BOUCLE_titre>
+	</BOUCLE_options>
 </BOUCLE_panier>
-[(#GET{id_abonnements_offerts}|print_r)]
+
 <div class="formulaire_spip formulaire_inscription">
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
@@ -28,10 +35,9 @@
 				comme bénéficiaire d'un abonnement offert,
 				ainsi que la date d'envoi souhaitée par le payeur.
 			-->]
-			[(#SAISIE{hidden, options_abonnement, defaut='abonnement_offert'})]
 			[(#SAISIE{hidden, id_payeur, defaut=#SESSION{id_auteur}})]
-			[(#GET{id_abonnements_offerts}|count|>{1}|non)
-				[(#SAISIE{hidden, id_abonnements_offre, defaut=#GET{id_abonnements_offres}|table_valeur{0}})]
+			[(#GET{_id_abonnements}|count|>{1}|non)
+				[(#SAISIE{hidden, _id_abonnement, defaut=#GET{_id_abonnement}|table_valeur{0}})]
 			]
 			<div class="formulaire__groupe formulaire__groupe--identite">
 				<fieldset>
@@ -70,8 +76,8 @@
 					</div>
 				</fieldset>
 			</div>
-			[(#GET{id_abonnements_offerts}|count|>{1}|oui)
-				[(#INCLURE{fond=formulaires/inc-inscription_tiers_abonnements, id_abonnements_offres=#GET{id_abonnements_offerts}})]
+			[(#GET{_id_abonnements}|count|>{1}|oui)
+				[(#INCLURE{fond=formulaires/inc-inscription_tiers_abonnements, _id_abonnements=#GET{_id_abonnements}})]
 			]
 			<p class="boutons">
 				<input type="submit" class="submit" value="<:bouton_valider:>" />
