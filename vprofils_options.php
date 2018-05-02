@@ -49,15 +49,26 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 	// 
 	// Récupérer le nom du formulaire et le champ pgp d'identification du bénéficiaire
 	$form = _request('formulaire_action');
-	$options_abo = _request('options_abonnement');
+	// $options_abo = _request('options_abonnement');
 	
 	// 
 	// Si tout s'est bien passé avant, SPIP a déjà créé l'auteur.
 	if ($user = sql_fetsel('*', 'spip_auteurs', 'email='.sql_quote($email))){
 
 		// 
-		// Si l'inscription est celle du bénéficiaire d'un abonnement offert
-		if ($form == 'inscription_tiers' AND $options_abo == 'abonnement_offert') {
+		// Si l'inscription est celle du bénéficiaire d'un abonnement offert :
+		// 1- on enregistre la date d'envoi du message demandée par le payeur
+		// dans le formulaire. Cette date sera reportée dans la date_debut
+		// de l'abonnement à sa création. 
+		// 
+		// 2- on bloque l'envoi du mail automatique à cette étape de l'inscription.
+		// 
+		// NOTE: [2 mai 2018] - vérification uniquement sur le type de formulaire
+		// utilisé. Le champ $options_abo est supprimé car, pour le moment, 
+		// l'abonnement offert est le seul cas qui nécessite l'utilisation
+		// de ce formulaire. 
+		// 
+		if ($form == 'inscription_tiers') {
 			// Date d'envoi de la notification et date potentielle de départ
 			// de l'abonnement.
 			$date_envoi = _request('message_date');
@@ -73,12 +84,12 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 			// est correcte à ce qu'il souhaite réellement. 
 
 			$options_abo = serialize(array('abonnement_offert_date' => $date_envoi));
-			
 			auteur_modifier($user['id_auteur'], array('pgp' => $options_abo));
 			
 			// 
 			// La notification par mail de l'inscription ne doit pas lui
 			// être envoyée tout de suite. 
+			// 
 			$envoyer_mail = false;
 		}
 	}
