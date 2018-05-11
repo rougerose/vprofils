@@ -88,7 +88,7 @@ function nom($texte) {
  */
 function liste_dates($tableau) {
 	if (is_array($tableau)) {
-		$begin = new DateTime('now +1day');
+		$begin = new DateTime('now +0day');
 		$end   = new DateTime('now +6months');
 
 		for($i = $begin; $i <= $end; $i->modify('+1 day')){

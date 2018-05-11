@@ -9,7 +9,7 @@ include_spip('inc/editer');
 
 
 
-function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '') {
+function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $option = '') {
 	// 
 	// L'auteur est enregistré comme contact ou organisation ?
 	// 
@@ -108,6 +108,28 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '') {
 		);
 	}
 	
+	if ($option && $option == 'password') {
+		// Ajouter les champs Mot de passe au fieldset des saisies_id
+		$saisies_id[1]['saisies'][] = array(
+			'saisie' => 'input',
+			'options' => array(
+				'nom' => 'password',
+				'label' => _T('entree_mot_passe'),
+				'obligatoire' => 'oui',
+				'type' => 'password',
+			)
+		);
+		$saisies_id[1]['saisies'][] = array(
+			'saisie' => 'input',
+			'options' => array(
+				'nom' => 'password_confirmation',
+				'label' => _T('vprofils:info_confirmer_passe'),
+				'obligatoire' => 'oui',
+				'type' => 'password'
+			)
+		);
+	}
+	
 	// 
 	// Les saisies d'adresse
 	// 
@@ -192,7 +214,7 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '') {
 }
 
 
-function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '') {
+function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '', $option = '') {
 	if (!$id_auteur OR !$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur))) {
 		return false;
 	}
@@ -230,6 +252,14 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '') {
 		
 	}
 	
+	//
+	// Mot de passe
+	// 
+	if ($option && $option == 'password') {
+		$valeurs['password'] = '';
+		$valeurs['password_confirmation'] = '';
+	}
+	
 	$valeurs['voie'] = isset($adresse['voie']) ? $adresse['voie'] : '';
 	$valeurs['complement'] = isset($adresse['complement']) ? $adresse['complement'] : '';
 	$valeurs['boite_postale'] = isset($adresse['boite_postale']) ? $adresse['boite_postale'] : '';
@@ -243,7 +273,7 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '') {
 
 
 
-function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '') {
+function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $option = '') {
 	$erreurs = array();
 	$type_client = _request('type_client');
 	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
@@ -290,12 +320,34 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '') {
 		}
 	}
 	
+	//
+	// Mot de passe
+	// 
+	if ($option && $option == 'password') {
+		if (_request('password') != _request('password_confirmation')){
+			$erreurs['password_confirmation'] = _T('info_passes_identiques');
+		}
+		
+		if ( strlen(_request('password')) < _PASS_LONGUEUR_MINI ){
+			$erreurs['password'] = _T('info_passe_trop_court_car_pluriel', array('nb' => _PASS_LONGUEUR_MINI));
+		}
+		
+		if (!_request('password')){
+			$erreurs['password'] = _T('info_obligatoire');
+		}
+		
+		if (!_request('password_confirmation')){
+			$erreurs['password_confirmation'] = _T('info_obligatoire');
+		}
+	}
+	
+	
 	return $erreurs;
 }
 
 
 
-function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
+function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $option = '') {
 	if ($retour) {
 		refuser_traiter_formulaire_ajax();
 	}
@@ -329,6 +381,12 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 	if ($type_client == 'contact') {
 		$nom_prenom = $nom.'*'.$prenom;
 		set_request('nom', $nom_prenom);
+	}
+	
+	// Mot de passe
+	if ($option && $option == 'password') {
+		$password = _request('password');
+		set_request('new_pass', $password);
 	}
 	
 	// 
@@ -444,5 +502,5 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '') {
 		$res['redirect'] = $retour;
 	}
 	
-	return $resultat;
+	return $res;
 }
