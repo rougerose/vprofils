@@ -71,4 +71,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'message_erreur_formulaire_inscription_tiers_id_payeur_manquant' => "Votre commande ne peut être enregistrée. <a href='@url@' class='suite-lien'>Veuillez recommencer <em>&#8594;</em></a>",
 	'message_ok_formulaire_inscription'                              => "Votre compte est créé. Un e-mail de confirmation vous a été également envoyé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
 	'message_ok_formulaire_inscription_tiers'                        => "Les informations relatives au bénéficiaire sont bien enregistrées",
+	'mail_inscription_objet' => "Votre compte est créé",
 );
