@@ -29,9 +29,19 @@ function formulaires_inscription_tiers_charger_dist($statut='6forum', $retour=''
 
 
 function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='') {
+	$erreurs = array();
 	
-	$inscription_verifier = charger_fonction("verifier", "formulaires/inscription");
-	$erreurs = $inscription_verifier($statut);
+	include_spip('inc/editer');
+	include_spip('inc/filtres');
+	
+	if (!$nom = _request('nom_inscription')) {
+		$erreurs['nom_inscription'] = _T('info_obligatoire');
+	} elseif (!nom_acceptable(_request('nom_inscription'))) {
+		$erreurs['nom_inscription'] = _T('ecrire:info_nom_pas_conforme');
+	}
+	if (!$mail = strval(_request('mail_inscription'))) {
+		$erreurs['mail_inscription'] = _T('info_obligatoire');
+	}
 	
 	$id_abonnements_offre = _request('_id_abonnements_offre');
 	$id_payeur = _request('id_payeur');
@@ -63,21 +73,43 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 
 
 function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour='') {
-	// enregistrer l'auteur
-	$inscription_traiter = charger_fonction("traiter", "formulaires/inscription");
-	$res = $inscription_traiter($statut);
-	$id_auteur = $res['id_auteur'];
+	$res = array();
+	include_spip('inc/vprofils');
 	
+	$mail = _request('mail_inscription');
+	
+	// 
+	// le bénéficiaire est déjà enregistré ?
+	// 
+	$auteur = sql_fetsel('*', 'spip_auteurs', 'email = '.sql_quote($mail));
+	$id_auteur = intval($auteur['id_auteur']);
 	$id_payeur = _request('id_payeur');
 	
-	// enregistrer contact et coordonnées
-	if ($id_auteur) {
+	// 
+	// Si l'auteur existe déjà, on ne tient pas compte des données identité et adresse
+	// indiquées par le payeur. Ce sera vérifié avec le bénéficiaire lorsqu'il
+	// validera le code cadeau.
+	// 
+	// Si l'auteur n'existe pas, on traite normalement tout le formulaire. 
+	// Si l'auteur existe déjà, on ne tient pas compte des données identité 
+	// et adresse indiquées par le payeur. 
+	// Ce sera vérifié avec le bénéficiaire lorsqu'il validera le code cadeau.
+	// 
+	if (!$id_auteur) {
+		$inscription_traiter = charger_fonction("traiter", "formulaires/inscription");
+		$res = $inscription_traiter($statut);
+		$id_auteur = $res['id_auteur'];
 		
-		include_spip('inc/vprofils');
+		if (!$id_auteur) {
+			$erreur = $res['message_erreur'];
+			$id_payeur = _request('id_payeur');
+			spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard. Message d'erreur : $erreur", 'vprofils'._LOG_ERREUR);
 		
-		// récupérer ou créer le contact
-		$id_contact = vprofils_creer_contact($id_auteur);
-		$res['id_contact'] = $id_contact;
+			$url_contact = generer_url_public('contact');
+			$res['message_erreur'] = _T('vprofils:message_erreur_formulaire_inscription_tiers', array('url' => $url_contact));
+			
+			return $res;
+		}
 		
 		// rectifier des données de l'auteur : 
 		// - login = e-mail
@@ -85,7 +117,6 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 		$prenom = _request('prenom');
 		$nom = _request('nom_inscription');
 		$nom_prenom = $nom.'*'.$prenom;
-		$mail = _request('mail_inscription');
 		
 		// autoriser la modification de l'auteur
 		include_spip('inc/autoriser');
@@ -100,17 +131,6 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 		// retirer l'autorisation exceptionnelle
 		autoriser_exception('modifier', 'auteur', $id_auteur, false);
 		
-		// Vérifier si l'auteur n'existe pas déjà comme auteur Vacarme
-		// et le noter dans les logs pour un éventuel traitement ultérieur du doublon ?
-		vprofils_verifier_doublons($id_contact);
-		
-		// créer l'organisation
-		if (_request('organisation')) {
-			$id_organisation = vprofils_creer_organisation($id_contact);
-		}
-		
-		$res['id_organisation'] = $id_organisation;
-		
 		// adresse et liaison avec l'auteur
 		include_spip('inc/editer');
 		
@@ -122,68 +142,79 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 			
 			$res['id_adresse'] = $adresse['id_adresse'];
 		}
+	}
+	
+	// 
+	// Récupérer ou créer le contact
+	// 
+	$id_contact = vprofils_creer_contact($id_auteur);
+	$res['id_contact'] = $id_contact;
+	
+	//
+	// Organisation si l'auteur n'était pas déjà existant
+	// et si le champ est rempli
+	// 
+	if (!$auteur && _request('organisation')) {
+		$id_organisation = vprofils_creer_organisation($id_contact);
+		$res['id_organisation'] = $id_organisation;
+	}
+	
+	// 
+	// Message et date d'envoi
+	// 
+	$texte_message = _request('texte_message');
+	
+	if (!empty($texte_message)) {
+		$objet = " ";
+		$date_envoi = date('Y-m-d H:i:s', _request('message_date'));
+		$type = "kdo";
 		
-		// message et date d'envoi. 
-		$texte_message = _request('texte_message');
-		
-		if (!empty($texte_message)) {
-			$objet = " ";
-			$date_envoi = date('Y-m-d H:i:s', _request('message_date'));
-			$type = "kdo";
-			
-			$id_message = sql_insertq('spip_messages', array(
-				'titre' => safehtml($objet),
-				'texte' => safehtml($texte_message),
-				'type' => $type,
-				'date_heure' => $date_envoi,
-				'date_fin' => $date_envoi,
-				'rv' => 'non',
-				'statut' => 'prepa',
-				'id_auteur' => $id_payeur,
-				'destinataires' => $id_auteur)
-			);
-		}
-		
-		// 
-		// Modifier le panier.
-		// Au niveau de l'item contenant l'abonnement offert,
-		// la valeur de l'option coupon (oui) est modifiée pour contenir l'id_auteur
-		// du bénéficiaire.
-		// 
-		include_spip('inc/paniers');
-		$id_panier = paniers_id_panier_encours();
+		$id_message = sql_insertq('spip_messages', array(
+			'titre' => safehtml($objet),
+			'texte' => safehtml($texte_message),
+			'type' => $type,
+			'date_heure' => $date_envoi,
+			'date_fin' => $date_envoi,
+			'rv' => 'non',
+			'statut' => 'prepa',
+			'id_auteur' => $id_payeur,
+			'destinataires' => $id_auteur)
+		);
+	}
+	
+	// 
+	// Modifier le panier.
+	// Au niveau de l'item contenant l'abonnement offert,
+	// la valeur de l'option coupon (oui) est modifiée pour contenir l'id_auteur
+	// du bénéficiaire.
+	// 
+	include_spip('inc/paniers');
+	$id_panier = paniers_id_panier_encours();
 
-		// 
-		// id de l'offre abonnement concernée par le cadeau
-		// 
-		$ids = _request('_id_abonnement');
-		@list($id_objet, $cle) = explode('-', $ids);
-		
-		
-		$panier = sql_fetsel('id_objet, options', 'spip_paniers_liens', 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
+	// 
+	// id de l'offre abonnement concernée par le cadeau
+	// 
+	$ids = _request('_id_abonnement');
+	@list($id_objet, $cle) = explode('-', $ids);
+	
+	$panier = sql_fetsel('id_objet, options', 'spip_paniers_liens', 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
 
-		$options = unserialize($panier['options']);
+	$options = unserialize($panier['options']);
 
-		if ($options[$cle][0] == 'oui') {
-			$options[$cle][0] = $id_auteur;
-			
-			sql_updateq('spip_paniers_liens', array('options' => serialize($options)), 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
-		}
+	if ($options[$cle][0] == 'oui') {
 		
-		$res['message_ok'] = _T('vprofils:message_ok_formulaire_inscription_tiers');
+		$options[$cle][0] = $id_auteur;
 		
-		// redirection
-		if ($retour) {
-			$res['redirect'] = $retour;
-		}
-		
-	} else {
-		$erreur = $res['message_erreur'];
-		$id_payeur = _request('id_payeur');
-		spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard. Message d'erreur : $erreur", 'vprofils'._LOG_ERREUR);
-		
-		$url_contact = generer_url_public('contact');
-		$res['message_erreur'] = _T('vprofils:message_erreur_formulaire_inscription_tiers', array('url' => $url_contact));
+		sql_updateq('spip_paniers_liens', array('options' => serialize($options)), 'id_panier='.$id_panier.' and objet='.sql_quote('abonnements_offre').' and id_objet='.$id_objet);
+	}
+	
+	$res['message_ok'] = _T('vprofils:message_ok_formulaire_inscription_tiers');
+	
+	// 
+	// Redirection éventuelle
+	// 
+	if ($retour) {
+		$res['redirect'] = $retour;
 	}
 	
 	return $res;

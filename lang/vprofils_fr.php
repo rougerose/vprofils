@@ -66,7 +66,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	// M
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
-	'message_erreur_formulaire_inscription_tiers'                    => "L'enregistrement des informations relatives au bénéficiaire de votre cadeau n'a pu être enregistré. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
+	'message_erreur_formulaire_inscription_tiers'                    => "Les informations relatives au bénéficiaire de votre cadeau n'ont pu être enregistrées. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_email_deja'         => "Cette personne est déjà inscrite sur notre site. Pour terminer votre commande, <a href='@url@' class='suite-lien'>veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_id_payeur_manquant' => "Votre commande ne peut être enregistrée. <a href='@url@' class='suite-lien'>Veuillez recommencer <em>&#8594;</em></a>",
 	'message_ok_formulaire_inscription'                              => "Votre compte est créé. Un e-mail de confirmation vous a été également envoyé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
