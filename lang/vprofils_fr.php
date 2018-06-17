@@ -3,6 +3,10 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
+	// C
+	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séprarées par une virgule",
+	'cfg_vendeur_label' => "Destinataires",
+	
 	// E
 	'erreur_civilite_obligatoire' => "Madame ou Monsieur ?",
 	'erreur_code_postal_obligatoire' => "Votre code postal est nécessaire",
@@ -72,4 +76,10 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'message_ok_formulaire_inscription'                              => "Votre compte est créé. Un e-mail de confirmation vous a été également envoyé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
 	'message_ok_formulaire_inscription_tiers'                        => "Les informations relatives au bénéficiaire sont bien enregistrées",
 	'mail_inscription_objet' => "Votre compte est créé",
+	
+	// T
+	'titre_page_configurer_vprofils' => 'Configurer le plugin vprofils',
+	
+	// V
+	'vprofils_titre' => 'Vacarme profils',
 );

@@ -1,0 +1,76 @@
+<BOUCLE_commande(COMMANDES){id_commande=#ENV{id_commande}}>
+	#SET{details, #ARRAY} #SET{id, ''}
+	<BOUCLE_commande_details_abonnements(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}{objet=abonnements_offre}{doublons}>
+		[(#SET{id, #ID_OBJET})]
+		[(#SET{numeros, #INFO_DUREE{abonnements_offre, #ID_OBJET}|numeros_nombre_en_clair})]
+		[(#SET{numero_debut, #NUMERO_DEBUT|calculer_numero_futur_titre{0}})]
+		
+		[(#SET{descriptif, [<:vpaniers:abonnement_resume_label_abonnement:> (#DESCRIPTIF*|supprimer_numero)][ (#GET{numeros})]})]
+		
+		[(#SET{descriptif, #GET{descriptif}|concat{<br/><:vpaniers:abonnement_resume_label_numero:> : }|concat{#GET{numero_debut}}})]
+		
+		[(#SET{details, #GET{details}|push{#ARRAY{
+			objet, #OBJET,
+			id_objet, #ID_OBJET,
+			descriptif,  #GET{descriptif},
+			quantite, #QUANTITE,
+			prix, #PRIX*,
+		prix_ht, #PRIX_HT*}}})]
+	</BOUCLE_commande_details_abonnements>
+	<BOUCLE_commande_details_cadeau(COMMANDES_DETAILS){id_commande}{objet=produit}{descriptif LIKE %abonnements_offre##GET{id}%}{doublons}>
+		[(#SET{cadeau, #DESCRIPTIF|match{Vacarme\s*\d+, m}})]
+		[(#SET{descriptif, <:vpaniers:abonnement_resume_label_cadeau:> : })]
+		[(#SET{descriptif, #GET{descriptif}|concat{#INFO_TITRE{produit, #ID_OBJET}}})]
+		[(#SET{details, #GET{details}|push{#ARRAY{
+			objet, #OBJET,
+			id_objet, #ID_OBJET,
+			descriptif,  #GET{descriptif},
+			quantite, #QUANTITE,
+			prix, #PRIX*,
+		prix_ht, #PRIX_HT*}}})]
+	</BOUCLE_commande_details_cadeau>
+	<BOUCLE_commande_details_numeros(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}{doublons}>
+		[(#SET{id, #ID_OBJET})]
+		[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero})]
+		[(#SET{details, #GET{details}|push{#ARRAY{
+			objet, #OBJET,
+			id_objet, #ID_OBJET,
+			descriptif,  #GET{descriptif},
+			quantite, #QUANTITE,
+			prix, #PRIX*,
+		prix_ht, #PRIX_HT*}}})]
+	</BOUCLE_commande_details_numeros>
+	
+	#SET{commande_ref,#REFERENCE}
+	
+	<table class="commande">
+		<thead>
+			<tr>
+				<th class="description"><:commandes:designation:></th>
+				<th class="quantite"><:commandes:label_quantite:></th>
+				<th class="montant"><:commandes:montant:></th>
+			</tr>
+		</thead>
+		<tbody>
+			#SET{total,0}
+			#SET{total_ht,0}
+			<BOUCLE_details(POUR){tableau #GET{details}}>
+			<tr class="detail">
+				<td class="description">
+					[(#VALEUR{descriptif})]
+				</td>
+				<td class="quantite">#VALEUR{quantite}</td>
+				<td class="montant">[(#VALEUR{prix}|prix_formater)]</td>
+			</tr>
+			[(#SET{total,[(#GET{total}|plus{[(#VALEUR{prix})]})]})]
+			</BOUCLE_details>
+		</tbody>
+		<tfoot>
+			<tr class="total_ttc">
+				<td class="descriptif"><:prix:label_total_ttc:></td>
+				<td></td>
+				<td class="montant">[(#GET{total}|prix_formater)]</td>
+			</tr>
+		</tfoot>
+	</table>
+</BOUCLE_commande>

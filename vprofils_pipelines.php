@@ -283,3 +283,45 @@ function vprofils_formulaire_traiter($flux) {
 	}
 	return $flux;
 }
+
+
+
+function vprofils_trig_bank_reglement_en_attente($flux) {
+	if (
+		$flux['args']['statut'] == 'attente' 
+		&& strpos($flux['args']['mode'], 'virement') !== false 
+		|| strpos($flux['args']['mode'], 'cheque') !== false
+	) {
+		
+		$id_auteur = $flux['args']['row']['id_auteur'];
+		$id_commande = $flux['args']['row']['id_commande'];
+		$source = sql_getfetsel('source', 'spip_commandes', 'id_commande='.intval($id_commande));
+		
+		include_spip('inc/bank');
+		$config = bank_config($flux['args']['mode']);
+		
+		// envoyer la notification
+		$notifications = charger_fonction('notifications', 'inc');
+		$options = array(
+			'id_auteur' => intval($id_auteur),
+			'config' => $config
+		);
+		// pour le client
+		//$notifications('commande_client_attente_'.$config['config'], $id_commande, $options);
+		// pour Vacarme
+		$notifications('commande_vendeur_attente_'.$config['config'], $id_commande, $options);
+		
+		
+		// supprimer le panier si nécessaire
+		if ($source && preg_match(",panier#(\d+)$,", $source, $m)) {
+			$id_panier = intval($m[1]);
+			
+			$supprimer_panier = charger_fonction('supprimer_panier', 'action/');
+			$supprimer_panier($id_panier);
+			
+			sql_updateq("spip_commandes", array('source' => ''), "source=" . sql_quote($source));
+		}
+	}
+	
+	return $flux;
+}
