@@ -24,9 +24,12 @@ function vprofils_creer_contact($id_auteur) {
 		include_spip('action/editer_contact');
 		$contact_set = array();
 		
-		// Données : prénom, civilite, 
+		// Données : prénom, civilite,
+		// ainsi que le nom car la fonction definir_contact a récupéré le nom
+		// de l'auteur qui a été enregistré sous la forme Nom*Prénom
 		$contact_set['prenom'] = _request('prenom');
 		$contact_set['civilite'] = _request('civilite');
+		$contact_set['nom'] = _request('nom_inscription');
 		
 		contact_modifier($id_contact, $contact_set);
 	}

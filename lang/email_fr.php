@@ -48,7 +48,7 @@ Compte bancaire :
 	
 	'intro_cheque' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par chèque, votre commande sera donc validée après réception de votre réglement.",
 	
-	'intro_virement' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par virement, votre commande sera donc validée après réception de votre réglement."
+	'intro_virement' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par virement, votre commande sera donc validée après réception de votre réglement.",
 	
 	// P
 	'politesse_signature' => "Cordialement, <br /> Le comité de rédaction de Vacarme",
