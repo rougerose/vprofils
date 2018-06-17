@@ -3,6 +3,7 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
+	// A
 	
 	// C
 	'cher_chere_madame' => "Chère",
@@ -49,6 +50,9 @@ Compte bancaire :
 	'intro_cheque' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par chèque, votre commande sera donc validée après réception de votre réglement.",
 	
 	'intro_virement' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par virement, votre commande sera donc validée après réception de votre réglement.",
+	
+	// O
+	'offert_a' => "Offert à",
 	
 	// P
 	'politesse_signature' => "Cordialement, <br /> Le comité de rédaction de Vacarme",

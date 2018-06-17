@@ -5,11 +5,21 @@
 		[(#SET{numeros, #INFO_DUREE{abonnements_offre, #ID_OBJET}|numeros_nombre_en_clair})]
 		[(#SET{numero_debut, #NUMERO_DEBUT|calculer_numero_futur_titre{0}})]
 		
-		[(#SET{descriptif, [<:vpaniers:abonnement_resume_label_abonnement:> (#DESCRIPTIF*|supprimer_numero)][ (#GET{numeros})]})]
-		
-		[(#SET{descriptif, #GET{descriptif}|concat{<br/><:vpaniers:abonnement_resume_label_numero:> : }|concat{#GET{numero_debut}}})]
-		
-		[(#SET{details, #GET{details}|push{#ARRAY{
+		[(#REM) 
+			<!-- abonnement offert ? -->
+		][
+		(#DESCRIPTIF|match{offert@}|oui)
+			[(#SET{id_beneficiaire, #DESCRIPTIF*|strstr{@}|substr{1}})]
+			[(#SET{beneficiaire, #INFO_NOM{auteur, #GET{id_beneficiaire}}|prenom_nom})]
+			[(#SET{descriptif, <:vpaniers:abonnement_resume_label_abonnement:>})]
+			[(#SET{descriptif, #GET{descriptif}|concat{#DESCRIPTIF*|supprimer_numero|replace{offert@\d+, '', m}}|concat{ #GET{numeros}}})]
+			[(#SET{descriptif, #GET{descriptif}|concat{<br/><:email:offert_a:> }|concat{#GET{beneficiaire}}})]
+		][
+		(#DESCRIPTIF|match{offert@}|non)
+			[(#SET{descriptif, [<:vpaniers:abonnement_resume_label_abonnement:> (#DESCRIPTIF*|supprimer_numero)][ (#GET{numeros})]})]
+			[(#SET{descriptif, #GET{descriptif}|concat{<br/><:vpaniers:abonnement_resume_label_numero:> : }|concat{#GET{numero_debut}}})]
+		][
+		(#SET{details, #GET{details}|push{#ARRAY{
 			objet, #OBJET,
 			id_objet, #ID_OBJET,
 			descriptif,  #GET{descriptif},
