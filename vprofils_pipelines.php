@@ -307,7 +307,7 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 			'config' => $config
 		);
 		// pour le client
-		//$notifications('commande_client_attente_'.$config['config'], $id_commande, $options);
+		$notifications('commande_client_attente_'.$config['config'], $id_commande, $options);
 		// pour Vacarme
 		$notifications('commande_vendeur_attente_'.$config['config'], $id_commande, $options);
 		
