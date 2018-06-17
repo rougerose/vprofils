@@ -13,8 +13,7 @@
 	<title>[(#NOM_SITE_SPIP)] : votre commande en attente de réglement</title>
 	<body>
 		<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>
-		<p>Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>#REFERENCE</b>, détaillée ci-dessous. Vous souhaitez régler par chèque, votre commande sera donc validée après réception de votre réglement.</p>
-		
+		<:email:intro_cheque{reference=#REFERENCE}|propre:>
 		<:email:info_cheque_envoyer{montant=#GET{montant}, transaction=#GET{transaction}, ordre=#GET{ordre}}|propre:>
 		<:email:info_cheque_envoyer_adresse|propre:>
 		[<p><strong>(#ENV{config/adresse}|propre|PtoBR)</strong></p>]
