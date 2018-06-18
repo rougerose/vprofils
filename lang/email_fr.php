@@ -15,12 +15,16 @@ Vous recevrez votre exemplaire de <em>@titre_numero_encours@</em>, le numéro qu
 
 Nous vous souhaitons par avance une bonne lecture.",
 
-	
+
+	'commande_confirmation' => "Nous avons bien enregistré votre commande, dont vous trouverez le détail ci-dessous, et nous vous remercions de votre confiance.",
+
+
 	'confirmation_activation_numero_prochain' => "Votre abonnement est maintenant actif.
 
 Vous recevrez votre exemplaire de <em>@titre_numero_prochain@</em>, le numéro que vous avez choisi pour débuter votre abonnement, dès qu'il sera disponible.
 
 Nous vous souhaitons par avance une bonne lecture.",
+
 	
 	// I
 	'il_elle_madame' => "elle",
