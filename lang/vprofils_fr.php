@@ -79,6 +79,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	// T
 	'titre_page_configurer_vprofils' => 'Configurer le plugin vprofils',
+	'titre_icone_compte' => 'Votre compte',
 	
 	// V
 	'vprofils_titre' => 'Vacarme profils',
