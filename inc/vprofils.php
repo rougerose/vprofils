@@ -100,7 +100,7 @@ function vprofils_verifier_doublons($id_contact) {
  *  - compte => inscription rapide
  *  - offrir, étape 3 => inscription rapide
  *  - abonner, étape 4 => inscription complète
- *  - offrir, étape 4 => inscription complète (formulaire inscription_tiers : rien à voir ?)
+ *  - offrir, étape 3 => inscription complète (formulaire inscription_tiers : rien à voir ?)
  *  
  * @param  string $page $page$etape
  * @return bool

@@ -275,7 +275,7 @@ function vprofils_formulaire_traiter($flux) {
 		$self = _request('self');
 		
 		// TODO: vrai dans les tous cas ?
-		$url = parametre_url($self, 'form', 'identification');
+		$url = parametre_url($self, 'formulaire', 'identification');
 
 		if (isset($flux['data']['message_ok'])) {
 			$flux['data']['message_ok'] = _T('vprofils:message_ok_formulaire_inscription', array('url' => $url));
