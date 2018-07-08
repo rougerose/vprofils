@@ -3,9 +3,24 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
+	// B
+	'bouton_deconnexion' => "Déconnexion",
+	
 	// C
 	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séprarées par une virgule",
 	'cfg_vendeur_label' => "Destinataires",
+
+	'compte_inscription_intertitre' => "Vous n'avez pas encore de compte&nbsp;?",
+	'compte_inscription_info'    => "Créez votre compte",
+	'compte_identification_intertitre' => "Vous avez déjà un compte&nbsp;?",
+	'compte_identification_info' => "Identifiez-vous",
+	'compte_titre_lien_section_abonnement' => "Votre <span>abonnement</span>",
+	'compte_titre_lien_section_informations' => "Vos <span>informations personnelles</span>",
+	'compte_titre_lien_section_motdepasse' => "Votre <span>mot de passe</span>",
+	'compte_titre_page_section_abonnement' => "Votre abonnement",
+	'compte_titre_page_section_informations' => "Modifier vos informations personnelles",
+	'compte_titre_page_section_motdepasse' => "Modifier votre mot de passe",
+	'compte_section_login_titre' => "Identifiez-vous pour accéder à votre compte",
 	
 	// E
 	'erreur_civilite_obligatoire' => "Madame ou Monsieur ?",
@@ -70,6 +85,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	// M
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
+	'message_bonjour' => "Bonjour, ",
 	'message_erreur_formulaire_inscription_tiers'                    => "Les informations relatives au bénéficiaire de votre cadeau n'ont pu être enregistrées. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_email_deja'         => "Cette personne est déjà inscrite sur notre site. Pour terminer votre commande, <a href='@url@' class='suite-lien'>veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_id_payeur_manquant' => "Votre commande ne peut être enregistrée. <a href='@url@' class='suite-lien'>Veuillez recommencer <em>&#8594;</em></a>",
@@ -80,6 +96,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// T
 	'titre_page_configurer_vprofils' => 'Configurer le plugin vprofils',
 	'titre_icone_compte' => 'Votre compte',
+	'titre_icone_logout' => "Déconnectez-vous",
 	
 	// V
 	'vprofils_titre' => 'Vacarme profils',
