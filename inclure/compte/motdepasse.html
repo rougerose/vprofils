@@ -1,0 +1,10 @@
+<BOUCLE_profil(AUTEURS){id_auteur}{tout}>
+<section class="c-section">
+	<h2 class="c-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:compte_titre_page_section_motdepasse:></h2>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})"> <:vprofils:info_revenir_page_principale:></a></p>]
+	[<div class="ajax">
+		(#FORMULAIRE_MODIFIER_MOTDEPASSE{#ID_AUTEUR})
+	</div>]
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})"><:vprofils:info_revenir_page_principale:></a></p>]
+</section>
+</BOUCLE_profil>

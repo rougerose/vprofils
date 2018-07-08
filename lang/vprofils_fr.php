@@ -82,6 +82,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'info_manquante_prenom'      => 'votre prénom',
 	'info_manquante_ville'       => 'votre ville',
 	'info_manquante_voie'        => 'votre adresse',
+	'info_revenir_page_principale' => "&#8592; Revenir à la page principale",
 	
 	// M
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
