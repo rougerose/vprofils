@@ -30,12 +30,14 @@ function vprofils_formulaire_fond($flux){
 		);
 		
 		// Formulaire simple ou complet ?
-		include_spip('inc/vprofils');
-		$page = _request('page');
-		$page .= (_request('etape')) ? _request('etape') : '';
-		$formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
+		// include_spip('inc/vprofils');
+		$formulaire_complet = (_request('type')) ? _request('type') : '';
 		
-		if ($formulaire_complet) {
+		//$page = _request('page');
+		//$page .= (_request('etape')) ? _request('etape') : '';
+		//$formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
+		
+		if ($formulaire_complet == 'complet') {
 			$coordonnees = recuperer_fond('formulaires/inc-inscription-coordonnees', $flux['args']['contexte']);
 			$marque = '<!-- coordonnees -->';
 			
@@ -67,12 +69,13 @@ function vprofils_formulaire_charger($flux) {
 		$flux['data']['password_confirmation'] = '';
 		
 		// Formulaire simple ou complet ?
-		include_spip('inc/vprofils');
-		$page = _request('page');
-		$page .= (_request('etape')) ? _request('etape') : '';
-		$formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
+		$formulaire_complet = (_request('type')) ? _request('type') : '';
+		// include_spip('inc/vprofils');
+		// $page = _request('page');
+		// $page .= (_request('etape')) ? _request('etape') : '';
+		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
 		
-		if ($formulaire_complet) {
+		if ($formulaire_complet == 'complet') {
 			$flux['data']['type_organisation'] = '';
 			$flux['data']['organisation'] = '';
 			$flux['data']['voie'] = '';
@@ -132,12 +135,13 @@ function vprofils_formulaire_verifier($flux) {
 		$obligatoires = array('civilite', 'nom_inscription', 'prenom', 'mail_inscription');
 		
 		// Formulaire simple ou complet ?
-		include_spip('inc/vprofils');
- 		$page = _request('page');
- 		$page .= (_request('etape')) ? _request('etape') : '';
- 		$formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
+		$formulaire_complet = (_request('type')) ? _request('type') : '';
+		// include_spip('inc/vprofils');
+ 		// $page = _request('page');
+ 		// $page .= (_request('etape')) ? _request('etape') : '';
+ 		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
  		
- 		if ($formulaire_complet) {
+ 		if ($formulaire_complet == 'complet') {
 			$obligatoires_adresse = array('voie', 'code_postal', 'ville', 'pays');
 			$obligatoires = array_merge($obligatoires, $obligatoires_adresse);
  		}
@@ -250,11 +254,12 @@ function vprofils_formulaire_traiter($flux) {
 		vprofils_verifier_doublons($id_contact);
 		
 		// Formulaire simple ou complet ?
- 		$page = _request('page');
- 		$page .= (_request('etape')) ? _request('etape') : '';
- 		$formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
+		$formulaire_complet = (_request('type')) ? _request('type') : '';
+ 		// $page = _request('page');
+ 		// $page .= (_request('etape')) ? _request('etape') : '';
+ 		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
 		
-		if ($formulaire_complet) {
+		if ($formulaire_complet == 'complet') {
 			
 			// Créer l'organisation et lier au contact,
 			// si nécessaire

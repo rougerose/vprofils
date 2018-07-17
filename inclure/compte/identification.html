@@ -7,7 +7,8 @@
 		[(#ENV{formulaire}|=={inscription}|non)
 			<section class="c-compte-section c-compte-identification__section c-compte-identification__section--login">
 				<h3 class="c-compte-section__titre c-compte-section__titre--s u-typo-font-vacarme"><:vprofils:compte_identification_intertitre:></h3>
-				[(#FORMULAIRE_LOGIN{#SELF|parametre_url{formulaire, ''}}})]
+				[(#SET{redirection, #ENV{retour, #SELF}})]
+				[(#FORMULAIRE_LOGIN{#GET{redirection}|parametre_url{formulaire, ''}})]
 			</section>
 			<section class="c-compte-section c-compte-identification__section c-compte-identification__section--inscription">
 				<h3 class="c-compte-section__titre c-compte-section__titre--s u-typo-font-vacarme"><:vprofils:compte_inscription_intertitre:></h3>
@@ -17,7 +18,7 @@
 			<section class="c-compte-section c-compte-identification__section c-compte-identification__section--inscription">
 				<h3 class="c-compte-section__titre c-compte-section__titre--s u-typo-font-vacarme"><:vprofils:compte_inscription_intertitre:></h3>
 				<div class="ajax">
-					#FORMULAIRE_INSCRIPTION
+					[(#FORMULAIRE_INSCRIPTION{6forum})]
 				</div>
 			</section>
 			<section class="c-compte-section c-compte-identification__section c-compte-identification__section--login">

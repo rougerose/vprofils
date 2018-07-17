@@ -87,30 +87,3 @@ function vprofils_verifier_doublons($id_contact) {
 		}
 	}
 }
-
-
-/**
- * Déterminer la variante du formulaire d'inscription.
- *
- * Le formulaire d'inscription est présenté selon deux variantes :
- * une variante rapide avec uniquement Nom, mail, mot de passe
- * et une variante complète avec les champs précédents + adresse.
- * 
- * Page :
- *  - compte => inscription rapide
- *  - offrir, étape 3 => inscription rapide
- *  - abonner, étape 4 => inscription complète
- *  - offrir, étape 3 => inscription complète (formulaire inscription_tiers : rien à voir ?)
- *  
- * @param  string $page $page$etape
- * @return bool
- */
-function vprofils_selectionner_formulaire_inscription($page) {
-	$pages_formulaire_complet = array('abonner4');
-	
-	if (in_array($page, $pages_formulaire_complet)) {
-		return true;
-	}
-	
-	return false;
-}
