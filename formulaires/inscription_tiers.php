@@ -91,9 +91,6 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	// validera le code cadeau.
 	// 
 	// Si l'auteur n'existe pas, on traite normalement tout le formulaire. 
-	// Si l'auteur existe déjà, on ne tient pas compte des données identité 
-	// et adresse indiquées par le payeur. 
-	// Ce sera vérifié avec le bénéficiaire lorsqu'il validera le code cadeau.
 	// 
 	if (!$id_auteur) {
 		$inscription_traiter = charger_fonction("traiter", "formulaires/inscription");
