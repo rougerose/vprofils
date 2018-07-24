@@ -1,86 +1,50 @@
 <BOUCLE_commande(COMMANDES){id_commande=#ENV{id_commande}}>
-	#SET{details, #ARRAY} #SET{id, ''}
-	<BOUCLE_commande_details_abonnements(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}{objet=abonnements_offre}{doublons}>
-		[(#SET{id, #ID_OBJET})]
-		[(#SET{numeros, #INFO_DUREE{abonnements_offre, #ID_OBJET}|numeros_nombre_en_clair})]
-		[(#SET{numero_debut, #NUMERO_DEBUT|calculer_numero_futur_titre{0}})]
-		
-		[(#REM) 
-			<!-- abonnement offert ? -->
-		][
-		(#DESCRIPTIF|match{offert@}|oui)
-			[(#SET{id_beneficiaire, #DESCRIPTIF*|strstr{@}|substr{1}})]
-			[(#SET{beneficiaire, #INFO_NOM{auteur, #GET{id_beneficiaire}}|prenom_nom})]
-			[(#SET{descriptif, <:vpaniers:abonnement_resume_label_abonnement:>})]
-			[(#SET{descriptif, #GET{descriptif}|concat{#DESCRIPTIF*|supprimer_numero|replace{offert@\d+, '', m}}|concat{ #GET{numeros}}})]
-			[(#SET{descriptif, #GET{descriptif}|concat{<br/><:email:offert_a:> }|concat{#GET{beneficiaire}}})]
-		][
-		(#DESCRIPTIF|match{offert@}|non)
-			[(#SET{descriptif, [<:vpaniers:abonnement_resume_label_abonnement:> (#DESCRIPTIF*|supprimer_numero)][ (#GET{numeros})]})]
-			[(#SET{descriptif, #GET{descriptif}|concat{<br/><:vpaniers:abonnement_resume_label_numero:> : }|concat{#GET{numero_debut}}})]
-		][
-		(#SET{details, #GET{details}|push{#ARRAY{
-			objet, #OBJET,
-			id_objet, #ID_OBJET,
-			descriptif,  #GET{descriptif},
-			quantite, #QUANTITE,
-			prix, #PRIX*,
-		prix_ht, #PRIX_HT*}}})]
-	</BOUCLE_commande_details_abonnements>
-	<BOUCLE_commande_details_cadeau(COMMANDES_DETAILS){id_commande}{objet=produit}{descriptif LIKE %abonnements_offre##GET{id}%}{doublons}>
-		[(#SET{cadeau, #DESCRIPTIF|match{Vacarme\s*\d+, m}})]
-		[(#SET{descriptif, <:vpaniers:abonnement_resume_label_cadeau:> : })]
-		[(#SET{descriptif, #GET{descriptif}|concat{#INFO_TITRE{produit, #ID_OBJET}}})]
-		[(#SET{details, #GET{details}|push{#ARRAY{
-			objet, #OBJET,
-			id_objet, #ID_OBJET,
-			descriptif,  #GET{descriptif},
-			quantite, #QUANTITE,
-			prix, #PRIX*,
-		prix_ht, #PRIX_HT*}}})]
-	</BOUCLE_commande_details_cadeau>
-	<BOUCLE_commande_details_numeros(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}{doublons}>
-		[(#SET{id, #ID_OBJET})]
-		[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero})]
-		[(#SET{details, #GET{details}|push{#ARRAY{
-			objet, #OBJET,
-			id_objet, #ID_OBJET,
-			descriptif,  #GET{descriptif},
-			quantite, #QUANTITE,
-			prix, #PRIX*,
-		prix_ht, #PRIX_HT*}}})]
-	</BOUCLE_commande_details_numeros>
-	
-	#SET{commande_ref,#REFERENCE}
-	
-	<table class="commande">
-		<thead>
-			<tr>
-				<th class="description"><:commandes:designation:></th>
-				<th class="quantite"><:commandes:label_quantite:></th>
-				<th class="montant"><:commandes:montant:></th>
-			</tr>
-		</thead>
-		<tbody>
-			#SET{total,0}
-			#SET{total_ht,0}
-			<BOUCLE_details(POUR){tableau #GET{details}}>
-			<tr class="detail">
-				<td class="description">
-					[(#VALEUR{descriptif})]
-				</td>
-				<td class="quantite">#VALEUR{quantite}</td>
-				<td class="montant">[(#VALEUR{prix}|prix_formater)]</td>
-			</tr>
-			[(#SET{total,[(#GET{total}|plus{[(#VALEUR{prix})]})]})]
-			</BOUCLE_details>
-		</tbody>
-		<tfoot>
-			<tr class="total_ttc">
-				<td class="descriptif"><:prix:label_total_ttc:></td>
-				<td></td>
-				<td class="montant">[(#GET{total}|prix_formater)]</td>
-			</tr>
-		</tfoot>
-	</table>
+	<h3><:commandes:recapitulatif:></h3>
+	[(#SET{date, #DATE|affdate_heure})]
+	<p><:email:notification_commande_numero{reference=#REFERENCE, date=#GET{date}}:></p>
+	#SET{total,0}
+	<B_details>
+		<table style="width:100%;">
+			<tbody>
+				<BOUCLE_details(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}>
+					<tr class="detail" style="vertical-align:bottom;">
+						<td class="description" style="width:60%;">
+							[(#OBJET|=={abonnements_offre}|oui)
+								[(#SET{numeros, #INFO_DUREE{abonnements_offre, #ID_OBJET}|numeros_nombre_en_clair})]
+								[(#DESCRIPTIF|match{offert@}|oui)
+									[(#SET{id_beneficiaire, #DESCRIPTIF*|strstr{@}|substr{1}})]
+									[(#SET{beneficiaire, #INFO_NOM{auteur, #GET{id_beneficiaire}}|prenom_nom})]
+									[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero|replace{offert@\d+, '', m}|trim})]
+									<:vpaniers:commande_recap_abonnement_offert{descriptif=#GET{descriptif}, numeros=#GET{numeros}, beneficiaire=#GET{beneficiaire}}:>
+								][
+								(#DESCRIPTIF|match{offert@}|non)
+									[(#SET{numero_debut, #NUMERO_DEBUT|calculer_numero_futur_titre{0}})]
+									[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero})]
+									<:vpaniers:commande_recap_abonnement_perso{descriptif=#GET{descriptif}, numero_debut=#GET{numero_debut}, numeros=#GET{numeros}}:>
+								]
+							][(#OBJET|=={produit}|oui)
+								[(#SET{descriptif, #DESCRIPTIF|match{Vacarme\s*\d+, m}})]
+								<:vpaniers:commande_recap_cadeau{descriptif=#GET{descriptif}}:>
+							][(#OBJET|=={rubrique}|oui)
+								[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero})]
+								[(#SET{date, #INFO_DATE_NUMERO{rubrique, #ID_OBJET}})]
+								[(#SET{date_numero, [(#GET{date}|saison)[ (#GET{date}|annee)]]})]
+								<:vpaniers:commande_recap_numero{descriptif=#GET{descriptif}, date_numero=#GET{date_numero}}:>
+							]
+						</td>
+						<td class="quantite" style="text-align:right;width:20%;">&times; #QUANTITE</td>
+						<td class="montant" style="text-align:right;width:20%;">[(#PRIX|prix_formater)]</td>
+					</tr>
+					[(#SET{total, #GET{total}|plus{#PRIX*}})]
+				</BOUCLE_details>
+			</tbody>
+			<tfoot>
+				<tr class="commande-total" style="text-align:right;">
+					<td style="width:60%;"></td>
+					<td style="width:20%;"><strong><:prix:label_total_ttc:></strong></td>
+					<td style="width:20%;">[<strong>(#GET{total}|prix_formater)</strong>]</td>
+				</tr>
+			</tfoot>
+		</table>
+	</B_details>
 </BOUCLE_commande>

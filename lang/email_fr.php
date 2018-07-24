@@ -3,21 +3,24 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
-	// A
+	// B
+	'bonjour' => "Bonjour",
 	
 	// C
 	'cher_chere_madame' => "Chère",
 	'cher_chere_monsieur' => "Cher",
+	
+	'commande_confirmation' => "Nous avons bien enregistré votre commande, dont vous trouverez le détail ci-dessous, et le réglement qui l'accompagne. 
+
+Vous receverez un e-mail de notre part dès que les articles de votre commande seront expédiés. 
+
+Nous vous remercions de votre confiance.",
 	
 	'confirmation_activation_numero_actuel' => "Votre abonnement est maintenant actif.
 
 Vous recevrez votre exemplaire de <em>@titre_numero_encours@</em>, le numéro que vous avez choisi pour débuter votre abonnement, dans quelques jours.
 
 Nous vous souhaitons par avance une bonne lecture.",
-
-
-	'commande_confirmation' => "Nous avons bien enregistré votre commande, dont vous trouverez le détail ci-dessous, et nous vous remercions de votre confiance.",
-
 
 	'confirmation_activation_numero_prochain' => "Votre abonnement est maintenant actif.
 
@@ -55,7 +58,14 @@ Compte bancaire :
 	
 	'intro_virement' => "Nous vous confirmons que nous avons bien enregistré votre commande numéro <b>@reference@</b>, détaillée ci-dessous. Vous souhaitez régler par virement, votre commande sera donc validée après réception de votre réglement.",
 	
+	// N
+	'notification_commande_vacarme' => "Une commande au nom de @client@ est enregistrée.",
+	'notification_commande_numero' => "Commande n<sup>o</sup> @reference@ du @date@",
+	
 	// O
+	'objet_equivalent_abonnements_offre' => "Abonnement",
+	'objet_equivalent_produit' => "Cadeau d’abonnement",
+	'objet_equivalent_rubrique' => "Numéro",
 	'offert_a' => "Offert à",
 	
 	// P

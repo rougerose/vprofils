@@ -303,6 +303,7 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 		$source = sql_getfetsel('source', 'spip_commandes', 'id_commande='.intval($id_commande));
 		
 		include_spip('inc/bank');
+		// TODO: corriger extraction mode de paiement, voir vabonnements/formulaires/editer_abonnement
 		$config = bank_config($flux['args']['mode']);
 		
 		// envoyer la notification

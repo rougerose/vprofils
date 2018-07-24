@@ -4,23 +4,29 @@
 		#SET{auteur_prenom, #PRENOM}
 		#SET{auteur_nom, #NOM}
 	</BOUCLE_contact_auteur>
-[(#ENV{qui}|=={client}|?{
-	<title>[(#NOM_SITE_SPIP)] : votre commande</title>,
-	<title>[(#NOM_SITE_SPIP)] : commande #REFERENCE payée</title>
-})]
+		[(#SET{auteur_prenom, #NOM|prenom})]
+		[(#SET{auteur_nom, #NOM|nom})]
+	<//B_contact_auteur>
+[(#ENV{qui}|=={client}|oui)
+	[(#MODE|=={gratuit}|?{
+		<title>[(#NOM_SITE_SPIP)]</title>,
+		<title>[(#NOM_SITE_SPIP)] : votre commande est bien enregistrée</title>
+	})]
+][(#ENV{qui}|=={client}|non)
+	<title>[(#NOM_SITE_SPIP)] : commande #REFERENCE / #MODE</title>
+]
 <body>
 	[(#ENV{qui}|=={client}|oui)
-		<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>
+		[(#GET{auteur_civilite}|oui)<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
+		[(#GET{auteur_civilite}|non)<p><:email:bonjour:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
 		<p><:email:commande_confirmation:></p>
 		<p><:email:politesse_signature:></p>
 	][
 	(#ENV{qui}|=={client}|non)
-		<p><:commandes:une_commande_de:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})]</p>
+		[(#SET{nom_client, #GET{auteur_prenom}|concat{' '}|concat{#GET{auteur_nom}}})]
+		<p><:email:notification_commande_vacarme{client=#GET{nom_client}}:></p>
 	]
 	<hr />
-	<h3><:commandes:recapitulatif:></h3>
-	[<p><:commandes:commande_numero:>(#REFERENCE)</p>]
-	[<p><:commandes:commande_date:> : (#DATE|affdate_heure)</p>]
 	[(#INCLURE{fond=inclure/notifications/recapitulatif_commande, id_commande=#ID_COMMANDE})]
 	<hr />
 </body>
