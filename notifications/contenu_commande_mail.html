@@ -19,7 +19,11 @@
 	[(#ENV{qui}|=={client}|oui)
 		[(#GET{auteur_civilite}|oui)<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
 		[(#GET{auteur_civilite}|non)<p><:email:bonjour:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
-		<p><:email:commande_confirmation:></p>
+		[(#MODE|=={gratuit}|oui)
+			
+		][(#MODE|=={gratuit}|non)
+			<p><:email:commande_confirmation:></p>
+		]
 		<p><:email:politesse_signature:></p>
 	][
 	(#ENV{qui}|=={client}|non)

@@ -294,8 +294,8 @@ function vprofils_formulaire_traiter($flux) {
 function vprofils_trig_bank_reglement_en_attente($flux) {
 	if (
 		$flux['args']['statut'] == 'attente' 
-		&& strpos($flux['args']['mode'], 'virement') !== false 
-		|| strpos($flux['args']['mode'], 'cheque') !== false
+		AND strpos($flux['args']['mode'], 'virement') !== false 
+		OR strpos($flux['args']['mode'], 'cheque') !== false
 	) {
 		
 		$id_auteur = $flux['args']['row']['id_auteur'];
@@ -313,13 +313,13 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 			'config' => $config
 		);
 		// pour le client
-		$notifications('commande_client_attente_'.$config['config'], $id_commande, $options);
+		$notifications('commande_client_attente', $id_commande, $options);
 		// pour Vacarme
-		$notifications('commande_vendeur_attente_'.$config['config'], $id_commande, $options);
+		$notifications('commande_vendeur_attente', $id_commande);
 		
 		
 		// supprimer le panier si nécessaire
-		if ($source && preg_match(",panier#(\d+)$,", $source, $m)) {
+		if ($source AND preg_match(",panier#(\d+)$,", $source, $m)) {
 			$id_panier = intval($m[1]);
 			
 			$supprimer_panier = charger_fonction('supprimer_panier', 'action/');
