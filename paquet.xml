@@ -30,6 +30,7 @@
 	<pipeline nom="formulaire_traiter" inclure="vprofils_pipelines.php" />
 	<pipeline nom="formulaire_fond" inclure="vprofils_pipelines.php" />
 	<pipeline nom="trig_bank_reglement_en_attente" inclure="vprofils_pipelines.php" />
+	<pipeline nom="bank_traiter_reglement" inclure="vprofils_pipelines.php" />
 	
 	<menu nom="configurer_vprofils" titre="vprofils:vprofils_titre" parent="menu_configuration" icone="images/vprofils-16.png" />
 </paquet>

@@ -290,7 +290,11 @@ function vprofils_formulaire_traiter($flux) {
 }
 
 
-
+/**
+ * Notifications des commandes et paiements en attente
+ * @param  array $flux
+ * @return array
+ */
 function vprofils_trig_bank_reglement_en_attente($flux) {
 	if (
 		$flux['args']['statut'] == 'attente' 
@@ -303,7 +307,6 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 		$source = sql_getfetsel('source', 'spip_commandes', 'id_commande='.intval($id_commande));
 		
 		include_spip('inc/bank');
-		// TODO: corriger extraction mode de paiement, voir vabonnements/formulaires/editer_abonnement
 		$config = bank_config($flux['args']['mode']);
 		
 		// envoyer la notification
@@ -329,5 +332,39 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 		}
 	}
 	
+	return $flux;
+}
+
+/**
+ * Notification des paiements reçus
+ * @param  array $flux 
+ * @return array
+ */
+function vprofils_bank_traiter_reglement($flux) {
+	if ($id_transaction = $flux['args']['id_transaction']
+		AND $flux['args']['notifier'] == true
+		AND $transaction = sql_fetsel('id_auteur, id_commande, statut, mode', 'spip_transactions', 'id_transaction='.intval($id_transaction))
+		AND $id_commande = intval($transaction['id_commande'])
+		AND $commande_statut = sql_getfetsel('statut', 'spip_commandes', 'id_commande='.$id_commande)
+		AND $transaction['statut'] == 'ok'
+		AND $commande_statut == 'paye'
+	) {
+		include_spip('inc/bank');
+		$config = bank_config($transaction['mode']);
+		$id_auteur = $transaction['id_auteur'];
+		
+		// envoyer la notification
+		$notifications = charger_fonction('notifications', 'inc');
+		$options = array(
+			'id_auteur' => intval($id_auteur),
+			'config' => $config
+		);
+		
+		// pour le client
+		$notifications('commande_client_reglement', $id_commande, $options);
+		
+		// pour Vacarme
+		$notifications('commande_vendeur_reglement', $id_commande, $options);
+	}
 	return $flux;
 }
