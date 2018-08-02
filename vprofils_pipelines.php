@@ -368,3 +368,22 @@ function vprofils_bank_traiter_reglement($flux) {
 	}
 	return $flux;
 }
+
+/**
+ * Types de coordonnées, pipeline du plugin Coordonnées.
+ *
+ * Limitation volontaire du choix des coordonnées à une seule possible (pref = principale)
+ * pour simplifier les traitements et tant que l'on ne propose pas à l'abonné 
+ * d'enregistrer plusieurs adresses, téléphones, etc. 
+ * Cette limitation s'applique également dans l'espace privé.
+ * 
+ * @param  $flux
+ * @return $flux
+ */
+function vprofils_types_coordonnees($flux) {
+	foreach($flux as $coordonnees => $types) {
+		$flux[$coordonnees] = array_filter($types, function($k) {return $k == 'pref';}, ARRAY_FILTER_USE_KEY);
+	}
+	
+	return $flux;
+}
