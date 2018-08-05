@@ -30,6 +30,8 @@ function vprofils_creer_contact($id_auteur) {
 		$contact_set['civilite'] = _request('civilite');
 		$contact_set['prenom'] = _request('prenom');
 		$contact_set['nom'] = _request('nom_inscription');
+		$contact_set['organisation'] = _request('organisation');
+		$contact_set['service'] = _request('service');
 		
 		contact_modifier($id_contact, $contact_set);
 	}

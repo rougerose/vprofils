@@ -153,15 +153,6 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	$id_contact = vprofils_creer_contact($id_auteur);
 	$res['id_contact'] = $id_contact;
 	
-	//
-	// Organisation si l'auteur n'était pas déjà existant
-	// et si le champ est rempli
-	// 
-	// if (!$auteur && _request('organisation')) {
-	// 	$id_organisation = vprofils_creer_organisation($id_contact);
-	// 	$res['id_organisation'] = $id_organisation;
-	// }
-	
 	// 
 	// Message et date d'envoi
 	// 

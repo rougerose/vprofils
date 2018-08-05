@@ -145,6 +145,10 @@ function vprofils_formulaire_verifier($flux) {
  		if ($formulaire_complet == 'complet') {
 			$obligatoires_adresse = array('voie', 'code_postal', 'ville', 'pays');
 			$obligatoires = array_merge($obligatoires, $obligatoires_adresse);
+			
+			if (_request('service') and !_request('organisation')) {
+				$flux['data']['organisation'] = _T('vprofils:erreur_si_service_organisation_nonvide');
+			}
  		}
 		
 		foreach ($obligatoires as $obligatoire) {
