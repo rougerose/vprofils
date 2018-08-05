@@ -14,6 +14,7 @@ function formulaires_inscription_tiers_charger_dist($statut='6forum', $retour=''
 		'prenom' => '',
 		'mail_inscription' => '',
 		'organisation' => '',
+		'service' => '',
 		'voie' => '',
 		'complement' => '',
 		'boite_postale' => '',
@@ -39,8 +40,13 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 	} elseif (!nom_acceptable(_request('nom_inscription'))) {
 		$erreurs['nom_inscription'] = _T('ecrire:info_nom_pas_conforme');
 	}
+	
 	if (!$mail = strval(_request('mail_inscription'))) {
 		$erreurs['mail_inscription'] = _T('info_obligatoire');
+	}
+	
+	if (!_request('organisation') and _request('service')) {
+		$erreurs['organisation'] = _T('vprofils:erreur_si_service_organisation_nonvide');
 	}
 	
 	$id_abonnements_offre = _request('_id_abonnements_offre');
@@ -151,10 +157,10 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	// Organisation si l'auteur n'était pas déjà existant
 	// et si le champ est rempli
 	// 
-	if (!$auteur && _request('organisation')) {
-		$id_organisation = vprofils_creer_organisation($id_contact);
-		$res['id_organisation'] = $id_organisation;
-	}
+	// if (!$auteur && _request('organisation')) {
+	// 	$id_organisation = vprofils_creer_organisation($id_contact);
+	// 	$res['id_organisation'] = $id_organisation;
+	// }
 	
 	// 
 	// Message et date d'envoi

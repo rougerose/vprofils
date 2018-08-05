@@ -76,8 +76,9 @@ function vprofils_formulaire_charger($flux) {
 		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
 		
 		if ($formulaire_complet == 'complet') {
-			$flux['data']['type_organisation'] = '';
+			// $flux['data']['type_organisation'] = '';
 			$flux['data']['organisation'] = '';
+			$flux['data']['service'] = '';
 			$flux['data']['voie'] = '';
 			$flux['data']['complement'] = '';
 			$flux['data']['boite_postale'] = '';
@@ -263,9 +264,9 @@ function vprofils_formulaire_traiter($flux) {
 			
 			// Créer l'organisation et lier au contact,
 			// si nécessaire
-			if (_request('organisation')) {
-				$id_organisation = vprofils_creer_organisation($id_contact);
-			}
+			// if (_request('organisation')) {
+			// 	$id_organisation = vprofils_creer_organisation($id_contact);
+			// }
 			
 			include_spip('inc/editer');
 			$res = formulaires_editer_objet_traiter('adresse', 'new');

@@ -10,103 +10,63 @@ include_spip('inc/editer');
 
 
 function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $option = '') {
-	// 
-	// L'auteur est enregistré comme contact ou organisation ?
-	// 
-	if ($id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur))) {
-		$saisies_id = array(
-			array(
-				'saisie' => 'hidden',
-				'options' => array(
-					'nom' => 'type_client',
-					'defaut' => 'contact'
-				)
+	$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur));
+	
+	$saisies_id = array(
+		array(
+			'saisie' => 'hidden',
+			'options' => array(
+				'nom' => 'type_client',
+				'defaut' => 'contact'
+			)
+		),
+		array(
+			'saisie' => 'fieldset',
+			'options' => array(
+				'nom' => 'groupe_identite',
+				'label' => _T('vprofils:formulaire_compte_titre'),
+				'conteneur_class' => 'formulaire__groupe formulaire__groupe--identite'
 			),
-			array(
-				'saisie' => 'fieldset',
-				'options' => array(
-					'nom' => 'groupe_identite',
-					'label' => _T('vprofils:formulaire_compte_titre'),
-					'conteneur_class' => 'formulaire__groupe formulaire__groupe--identite'
+			'saisies' => array(
+				array(
+					'saisie' => 'radio',
+					'options' => array(
+						'nom' => 'civilite',
+						'label' => _T('vprofils:formulaire_civilite_label'),
+						'obligatoire' => 'oui',
+						'data' => array(
+							'madame' => _T('vprofils:formulaire_civilite_madame_label'),
+							'monsieur' => _T('vprofils:formulaire_civilite_monsieur_label')
+						)
+					)
 				),
-				'saisies' => array(
-					array(
-						'saisie' => 'radio',
-						'options' => array(
-							'nom' => 'civilite',
-							'label' => _T('vprofils:formulaire_civilite_label'),
-							'obligatoire' => 'oui',
-							'data' => array(
-								'madame' => _T('vprofils:formulaire_civilite_madame_label'),
-								'monsieur' => _T('vprofils:formulaire_civilite_monsieur_label')
-							)
-						)
-					),
-					array(
-						'saisie' => 'input',
-						'options' => array(
-							'nom' => 'nom',
-							'label' => _T('vprofils:formulaire_nom_label'),
-							'obligatoire' => 'oui',
-						)
-					),
-					array(
-						'saisie' => 'input',
-						'options' => array(
-							'nom' => 'prenom',
-							'label' => _T('vprofils:formulaire_prenom_label'),
-							'obligatoire' => 'oui'
-						)
-					),
-					array(
-						'saisie' => 'email',
-						'options' => array(
-							'nom' => 'email',
-							'label' => _T('vprofils:formulaire_mail_label'),
-							'obligatoire' => 'oui'
-						)
+				array(
+					'saisie' => 'input',
+					'options' => array(
+						'nom' => 'nom',
+						'label' => _T('vprofils:formulaire_nom_label'),
+						'obligatoire' => 'oui',
+					)
+				),
+				array(
+					'saisie' => 'input',
+					'options' => array(
+						'nom' => 'prenom',
+						'label' => _T('vprofils:formulaire_prenom_label'),
+						'obligatoire' => 'oui'
+					)
+				),
+				array(
+					'saisie' => 'email',
+					'options' => array(
+						'nom' => 'email',
+						'label' => _T('vprofils:formulaire_mail_label'),
+						'obligatoire' => 'oui'
 					)
 				)
 			)
-		);
-		
-	} elseif ($id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'id_auteur='.intval($id_auteur))) {
-		$saisies_id = array(
-			array(
-				'saisie' => 'hidden',
-				'options' => array(
-					'nom' => 'type_client',
-					'defaut' => 'organisation'
-				)
-			),
-			array(
-				'saisie' => 'fieldset',
-				'options' => array(
-					'nom' => 'groupe_identite',
-					'label' => _T('vprofils:formulaire_compte_titre'),
-					'conteneur_class' => 'formulaire__groupe formulaire__groupe--identite'
-				),
-				'saisies' => array(
-					array(
-						'saisie' => 'input',
-						'options' => array(
-							'nom' => 'nom',
-							'label' => _T('vprofils:formulaire_nom_organisation_label'),
-							'obligatoire' => 'oui',
-						)
-					),
-					array(
-						'saisie' => 'email',
-						'options' => array(
-							'nom' => 'email',
-							'label' => _T('vprofils:formulaire_mail_label'),
-							'obligatoire' => 'oui'
-						)
-					)
-				)
-			)
-		);
-	}
+		)
+	);
 	
 	if ($option && $option == 'password') {
 		// Ajouter les champs Mot de passe au fieldset des saisies_id
@@ -147,6 +107,13 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 					'options' => array(
 						'nom' => 'organisation',
 						'label' => _T('vprofils:formulaire_organisation_label')
+					)
+				),
+				array(
+					'saisie' => 'input',
+					'options' => array(
+						'nom' => 'service',
+						'label' => _T('vprofils:formulaire_service_label')
 					)
 				),
 				array(
@@ -222,25 +189,13 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '', $opt
 	$valeurs = array();
 	
 	if ($contact = sql_fetsel('*', 'spip_contacts', 'id_auteur='.intval($id_auteur))) {
-		$valeurs['type_client'] = '';
+		$valeurs['type_client'] = 'contact';
 		$valeurs['civilite'] = $contact['civilite'];
 		$valeurs['nom'] = $contact['nom'];
 		$valeurs['prenom'] = $contact['prenom'];
 		$valeurs['email'] = $auteur['email'];
-		
-		if ($id_organisation = sql_getfetsel('id_organisation', 'spip_organisations_liens', 'id_objet='.intval($contact['id_contact']).' AND objet='.sql_quote('contact'))) {
-			
-			$organisation_liee = sql_fetsel('*', 'spip_organisations', 'id_organisation='.intval($id_organisation));
-			$valeurs['organisation'] = $organisation_liee['nom'];
-			
-		}
-		
-	} elseif ($organisation = sql_fetsel('*', 'spip_organisations', 'id_auteur='.intval($id_auteur))) {
-		
-		$valeurs['type_client'] = '';
-		$valeurs['nom'] = $organisation['nom'];
-		$valeurs['email'] = $auteur['email'];
-		
+		$valeurs['organisation'] = $contact['organisation'];
+		$valeurs['service'] = $contact['service'];
 	}
 	
 	// 
@@ -275,21 +230,13 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '', $opt
 
 function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $option = '') {
 	$erreurs = array();
-	$type_client = _request('type_client');
+
 	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
 	
 	// 
 	// Les champs obligatoires
 	// 
-	if ($type_client == 'contact') {
-		
-		$obligatoires = array('civilite', 'nom', 'prenom', 'email', 'voie', 'code_postal', 'ville', 'pays');
-		
-	} elseif ($type_client == 'organisation') {
-		
-		$obligatoires = array('nom', 'email', 'voie', 'code_postal', 'ville', 'pays');
-		
-	}
+	$obligatoires = array('civilite', 'nom', 'prenom', 'email', 'voie', 'code_postal', 'ville', 'pays');
 	
 	foreach ($obligatoires as $obligatoire) {
 		if (!strlen(_request($obligatoire))) {
@@ -318,6 +265,10 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $op
 				
 			}
 		}
+	}
+	
+	if (_request('service') and !_request('organisation')) {
+		$erreurs['organisation'] = _T('vprofils:erreur_si_service_organisation_nonvide');
 	}
 	
 	//
@@ -375,13 +326,8 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 		}
 	}
 	
-	// 
-	// Si c'est un contact, corriger le champ Nom
-	// 
-	if ($type_client == 'contact') {
-		$nom_prenom = $nom.'*'.$prenom;
-		set_request('nom', $nom_prenom);
-	}
+	$nom_prenom = $nom.'*'.$prenom;
+	set_request('nom', $nom_prenom);
 	
 	// Mot de passe
 	if ($option && $option == 'password') {
@@ -393,7 +339,12 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 	// Modification des champs Auteur
 	// 
 	$res_auteur = formulaires_editer_objet_traiter('auteur', intval($id_auteur), 0, 0, $retour, '');
-	$res = array_merge($res, $res_auteur);
+	
+	if (isset($res_auteur['message_erreur'])) {
+		return $res['message_erreur'] = $res_auteur['message_erreur'];
+	} else {
+		$res['message_ok'] = $res_auteur['message_ok'];
+	}
 	
 	// 
 	// Rétablir le champ Nom tel que validé par l'auteur
@@ -405,81 +356,16 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 		// Modification des champs Contact
 		// 
 		$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur));
-		$res_contact = formulaires_editer_objet_traiter('contact', intval($id_contact), 0, 0, $retour, '');
-		$res = array_merge($res, $res_contact);
-		
 		$organisation = _request('organisation');
-		$id_organisation_actuelle = sql_getfetsel('id_organisation', 'spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact'));
+		$service = _request('service');
+		$res_contact = formulaires_editer_objet_traiter('contact', intval($id_contact), 0, 0, $retour, '');
 		
-		//
-		// Si le champ Organisation est maintenant vide
-		// mais une organisation est liée au chargement du formulaire.
-		// 
-		if (!$organisation AND $id_organisation_actuelle) {
-			// 
-			// Dissocier l'organisation
-			// 
-			//include_spip('action/supprimer_lien');
-			$dissocier = charger_fonction("supprimer_lien","action");
-			$organisation_contact = "organisation-$id_organisation_actuelle-contact-$id_contact";
-			$dissocier($organisation_contact);
+		if (isset($res_contact['message_erreur'])) {
+			return $res['message_erreur'] = $res_contact['message_erreur'];
+		} else {
+			$res['message_ok'] = $res_auteur['message_ok'];
 		}
-		
-		
-		// 
-		// Si le champ Organisation est renseigné
-		// 
-		if ($organisation = _request('organisation')) {
-			
-			if ($id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation))) {
-				
-				if (!sql_countsel('spip_organisations_liens', 'id_objet='.$id_contact.' and objet='.sql_quote('contact').' and id_organisation='.$id_organisation)) {
-					// 
-					// lier l'organisation
-					// 
-					include_spip('action/editer_liens');
-					objet_associer(array('organisation' => $id_organisation), array('contact' => $id_contact));
-				}
-				
-				$res['id_organisation'] = $id_organisation;
-				
-			} else {
-				//
-				// Modifier le champs Nom
-				// 
-				set_request('nom', $organisation);
-				
-				// 
-				// créer
-				// 
-				$res_organisation = formulaires_editer_objet_traiter('organisation', 'new', 0, 0, $retour, '');
-				
-				if ($res_organisation['id_organisation']) {
-					include_spip('action/editer_liens');
-					objet_associer(array('organisation' => $res_organisation['id_organisation']), array('contact' => $id_contact));
-				}
-				
-				//
-				// Rétablir le champs Nom de l'auteur
-				// 
-				set_request('nom', $nom);
-				
-				$res = array_merge($res, $res_organisation);
-			}
-		}
-		
-	} elseif ($type_client == 'organisation') {
-		
-		$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'id_auteur='.intval($id_auteur));
-		
-		// 
-		// Modification des champs Organisation
-		// 
-		$res_organisation = formulaires_editer_objet_traiter('organisation', $id_organisation, 0, 0, $retour, '');
-		
-		$res = array_merge($res, $res_organisation);
-		
-	}
+	} 
 	
 	// 
 	// Modification des champs Adresse
@@ -496,10 +382,21 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 		include_spip('action/editer_liens');
 		objet_associer(array('adresse' => $res_adresse['id_adresse']), array('auteur' => intval($id_auteur)), array('type' => _ADRESSE_TYPE_DEFAUT));
 	}
-	$res = array_merge($res, $res_adresse);
+	
+	if (isset($res_adresse['message_erreur'])) {
+		return $res['message_erreur'] = $res_adresse['message_erreur'];
+	} else {
+		$res['message_ok'] = $res_adresse['message_adresse'];
+	}
 
+	if (!isset($res['message_erreur']) and !isset($res['message_ok'])) {
+		$res['message_ok'] = _T('info_modification_enregistree');
+		$res['editable'] = true;
+	}
+	
 	if ($retour) {
 		$res['redirect'] = $retour;
+		$res['editable'] = true;
 	}
 	
 	return $res;

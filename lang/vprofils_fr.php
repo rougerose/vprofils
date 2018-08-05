@@ -32,6 +32,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'erreur_nom_obligatoire' => "Veuillez indiquer votre nom",
 	'erreur_pays_obligatoire' => "Nous avons besoin de connaître votre pays de résidence",
 	'erreur_prenom_obligatoire' => "Votre prénom",
+	'erreur_si_service_organisation_nonvide' => "Le champ Service est renseigné, merci de renseigner également le champ Organisation",
 	'erreur_ville_obligatoire' => "Votre ville",
 	'erreur_voie_obligatoire' => "Votre adresse nous permettra de vous envoyer vos exemplaires",
 	

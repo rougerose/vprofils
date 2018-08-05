@@ -27,8 +27,8 @@ function vprofils_creer_contact($id_auteur) {
 		// Données : prénom, civilite,
 		// ainsi que le nom car la fonction definir_contact a récupéré le nom
 		// de l'auteur qui a été enregistré sous la forme Nom*Prénom
-		$contact_set['prenom'] = _request('prenom');
 		$contact_set['civilite'] = _request('civilite');
+		$contact_set['prenom'] = _request('prenom');
 		$contact_set['nom'] = _request('nom_inscription');
 		
 		contact_modifier($id_contact, $contact_set);
@@ -46,7 +46,8 @@ function vprofils_creer_contact($id_auteur) {
 function vprofils_creer_organisation($id_contact) {
 	// nom de l'organisation
 	$organisation = _request('organisation');
-	
+	$service = (_request('service')) ? _request('service') : '';
+
 	// organisation déjà enregistrée et déjà liée au contact ?
 	if (
 		$id_organisation = sql_getfetsel('id_organisation', 'spip_organisations', 'nom='.sql_quote($organisation))
@@ -54,18 +55,19 @@ function vprofils_creer_organisation($id_contact) {
 	) {
 		return $id_organisation;
 	}
-	
+
 	// sinon créer l'organisation
 	include_spip('action/editer_organisation');
 	$id_organisation = organisation_inserer();
 	$organisation_set = array();
-	$organisation_set['nom'] = _request('organisation');
+	$organisation_set['nom'] = $organisation;
+	$organisation_set['service'] = $service;
 	organisation_modifier($id_organisation, $organisation_set);
-	
+
 	// lier l'organisation au contact
 	include_spip('action/editer_liens');
 	objet_associer(array('organisation' => $id_organisation), array('contact' => $id_contact));
-	
+
 	return $id_organisation;
 }
 
