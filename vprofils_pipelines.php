@@ -358,18 +358,27 @@ function vprofils_bank_traiter_reglement($flux) {
 		$config = bank_config($transaction['mode']);
 		$id_auteur = $transaction['id_auteur'];
 		
-		// envoyer la notification
+		
+		// Les offres d'abonnement obligatoire ou permanent ne font pas l'objet
+		// d'une notification
+		include_spip('inc/vabonnements');
+		$offres_obligatoires = vabonnements_offres_obligatoires();
+		
+		// Envoyer les notifications
 		$notifications = charger_fonction('notifications', 'inc');
 		$options = array(
 			'id_auteur' => intval($id_auteur),
 			'config' => $config
 		);
 		
-		// pour le client
-		$notifications('commande_client_reglement', $id_commande, $options);
-		
-		// pour Vacarme
+		// Notifier Vacarme, dans tous les cas.
 		$notifications('commande_vendeur_reglement', $id_commande, $options);
+		
+		// Si la commande ne contient un abonnement de type permanent ou obligatoire,
+		// notifier le client
+		if (!sql_countsel('spip_commandes_details', sql_in('id_objet', $offres_obligatoires).' AND id_commande='.$id_commande.' AND objet='.sql_quote('abonnements_offre'))) {
+			$notifications('commande_client_reglement', $id_commande, $options);
+		}
 	}
 	return $flux;
 }

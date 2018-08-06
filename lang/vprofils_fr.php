@@ -7,7 +7,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'bouton_deconnexion' => "Déconnexion",
 	
 	// C
-	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séprarées par une virgule",
+	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séparées par une virgule",
 	'cfg_vendeur_label' => "Destinataires",
 
 	'compte_inscription_intertitre' => "Vous n'avez pas encore de compte&nbsp;?",
