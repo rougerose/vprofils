@@ -62,8 +62,8 @@ function formulaires_inscription_tiers_verifier_dist($statut='6forum', $retour='
 		$url_contact = generer_url_public('contact');
 		$erreurs['message_erreur'] = _T('vprofils:message_erreur_formulaire_inscription_tiers_email_deja', array('url' => $url_contact));
 		
-		$mail_beneficiaire = _request('mail_inscription');
-		spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard, l'adresse email $mail_beneficiaire est déjà enregistrée.", 'vprofils'._LOG_ERREUR);
+		// $mail_beneficiaire = _request('mail_inscription');
+		// spip_log("Enregistrement du bénéficiaire d'un abonnement offert par $id_payeur a échoué lors du traitement du formulaire d'inscription standard, l'adresse email $mail_beneficiaire est déjà enregistrée.", 'vprofils'._LOG_ERREUR);
 	}
 	
 	$obligatoires = array('civilite', '_id_abonnement', 'prenom', 'voie', 'code_postal', 'ville', 'pays', 'message_date');
@@ -86,7 +86,6 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	
 	// 
 	// le bénéficiaire est déjà enregistré ?
-	// 
 	$auteur = sql_fetsel('*', 'spip_auteurs', 'email = '.sql_quote($mail));
 	$id_auteur = intval($auteur['id_auteur']);
 	$id_payeur = _request('id_payeur');
@@ -150,8 +149,23 @@ function formulaires_inscription_tiers_traiter_dist($statut='6forum', $retour=''
 	// 
 	// Récupérer ou créer le contact
 	// 
-	$id_contact = vprofils_creer_contact($id_auteur);
-	$res['id_contact'] = $id_contact;
+	if (!$contact = sql_fetsel('*', 'spip_contacts', 'id_auteur='.$id_auteur)) {
+		$definir_contact = charger_fonction('definir_contact', 'action');
+		$id_contact = $definir_contact('contact/'.$id_auteur);
+		if (!$id_contact) {
+			spip_log("Erreur lors de l'inscription de $nom $prenom (login : $mail) après l'étape de création du contact. L'identifiant auteur utilisé est #$id_auteur", 'vprofils_erreurs_inscription'._LOG_ERREUR);
+			return $res['message_erreur'] = _T('vprofils:message_erreur_inscription');
+		} 
+	}
+	
+	if ($id_contact or $id_contact = $contact['id_contact']) {
+		include_spip('action/editer_contact');
+		contact_modifier($id_contact, $set = array(
+			'civilite' => $civilite,
+			'prenom' => $prenom,
+			'nom' => $nom)
+		);
+	}
 	
 	// 
 	// Message et date d'envoi

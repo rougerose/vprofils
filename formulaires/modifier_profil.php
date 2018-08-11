@@ -8,18 +8,16 @@ include_spip("base/abstract_sql");
 include_spip('inc/editer');
 
 
-
+/**
+ * Saisies du formulaire modification de profil abonné/client
+ * @param  int $id_auteur
+ * @param  string $retour URL de redirection
+ * @param  string $option Si password les champs sont ajoutés
+ * @return array
+ */
 function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $option = '') {
-	$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur));
-	
+	// saisies données personnelles
 	$saisies_id = array(
-		array(
-			'saisie' => 'hidden',
-			'options' => array(
-				'nom' => 'type_client',
-				'defaut' => 'contact'
-			)
-		),
 		array(
 			'saisie' => 'fieldset',
 			'options' => array(
@@ -64,9 +62,9 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 		)
 	);
 	
-	if ($option && $option == 'password') {
+	if ($option and $option == 'password') {
 		// Ajouter les champs Mot de passe au fieldset des saisies_id
-		$saisies_id[1]['saisies'][] = array(
+		$saisies_id[0]['saisies'][] = array(
 			'saisie' => 'input',
 			'options' => array(
 				'nom' => 'password',
@@ -75,7 +73,7 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 				'type' => 'password',
 			)
 		);
-		$saisies_id[1]['saisies'][] = array(
+		$saisies_id[0]['saisies'][] = array(
 			'saisie' => 'input',
 			'options' => array(
 				'nom' => 'password_confirmation',
@@ -162,7 +160,7 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 					'options' => array(
 						'nom' => 'pays',
 						'label' => _T('vprofils:formulaire_pays_label'),
-						'defaut' => 'FR',
+						// 'defaut' => 'FR',
 						'code_pays' => 'oui',
 						'obligatoire' => 'oui'
 					)
@@ -177,40 +175,36 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 }
 
 
+/**
+ * Formulaire modifier profil, chargement
+ * @param  int $id_auteur
+ * @param  string $retour URL de redirection
+ * @param  string $option Si password les champs sont ajoutés
+ * @return array
+ */
 function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '', $option = '') {
-	if (!$id_auteur OR !$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur))) {
+	$id_auteur = intval($id_auteur);
+	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.$id_auteur);
+	if (!$id_auteur or !$auteur) {
 		return false;
 	}
 	
 	$valeurs = array();
 	
 	if ($contact = sql_fetsel('*', 'spip_contacts', 'id_auteur='.intval($id_auteur))) {
-		$valeurs['type_client'] = 'contact';
-		$valeurs['civilite'] = $contact['civilite'];
-		$valeurs['nom'] = $contact['nom'];
-		$valeurs['prenom'] = $contact['prenom'];
-		$valeurs['email'] = $auteur['email'];
-		$valeurs['organisation'] = $contact['organisation'];
-		$valeurs['service'] = $contact['service'];
+		$valeurs['civilite'] = isset($contact['civilite']) ? $contact['civilite'] : '';
+		$valeurs['nom'] = isset($contact['nom']) ? $contact['nom'] : '';
+		$valeurs['prenom'] = isset($contact['prenom']) ? $contact['prenom'] : '';
+		$valeurs['email'] = isset($auteur['email']) ? $auteur['email'] : '';
 	}
 	
 	// 
 	// Coordonnees
 	// 
-	if ($id_adresse = sql_getfetsel('id_adresse', 'spip_adresses_liens', 'id_objet='.intval($id_auteur).' AND objet='.sql_quote('auteur').' AND type='.sql_quote(_ADRESSE_TYPE_DEFAUT))) {
-		
-		$adresse = sql_fetsel('*', 'spip_adresses', 'id_adresse='.intval($id_adresse));
-		
-	}
+	$adresse = sql_fetsel('*', 'spip_adresses AS adresses INNER JOIN spip_adresses_liens AS L1 ON (L1.id_adresse = adresses.id_adresse)', 'L1.id_objet='.$id_auteur.' AND L1.objet='.sql_quote('auteur'));
 	
-	//
-	// Mot de passe
-	// 
-	if ($option && $option == 'password') {
-		$valeurs['password'] = '';
-		$valeurs['password_confirmation'] = '';
-	}
-	
+	$valeurs['organisation'] = isset($adresse['organisation']) ? $adresse['organisation'] : '';
+	$valeurs['service'] = isset($adresse['service']) ? $adresse['service'] : '';
 	$valeurs['voie'] = isset($adresse['voie']) ? $adresse['voie'] : '';
 	$valeurs['complement'] = isset($adresse['complement']) ? $adresse['complement'] : '';
 	$valeurs['boite_postale'] = isset($adresse['boite_postale']) ? $adresse['boite_postale'] : '';
@@ -219,19 +213,28 @@ function formulaires_modifier_profil_charger_dist($id_auteur, $retour = '', $opt
 	$valeurs['region'] = isset($adresse['region']) ? $adresse['region'] : '';
 	$valeurs['pays'] = isset($adresse['pays']) ? $adresse['pays'] : '';
 	
+	//
+	// Mot de passe
+	// 
+	if ($option and $option == 'password') {
+		$valeurs['password'] = '';
+		$valeurs['password_confirmation'] = '';
+	}
+	
 	return $valeurs;
 }
 
 
-
+/**
+ * Formulaire modifier profil, vérification
+ * @param  int $id_auteur
+ * @param  string $retour URL de redirection
+ * @param  string $option Si password les champs sont ajoutés
+ * @return array
+ */
 function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $option = '') {
 	$erreurs = array();
-
-	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
 	
-	// 
-	// Les champs obligatoires
-	// 
 	$obligatoires = array('civilite', 'nom', 'prenom', 'email', 'voie', 'code_postal', 'ville', 'pays');
 	
 	foreach ($obligatoires as $obligatoire) {
@@ -241,35 +244,33 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $op
 	}
 	
 	// 
-	// Vérifier l'email
+	// Vérifications supplémentaires
 	// 
+	
+	// Organisation et service
+	if (_request('service') and !_request('organisation')) {
+		$erreurs['organisation'] = _T('vprofils:erreur_si_service_organisation_nonvide');
+	}
+	
+	// Email
 	if (!isset($erreurs['email'])) {
-		
+		$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
 		$email = trim(_request('email'));
 		
 		if (!email_valide($email)) {
-			
 			$erreurs['email'] = _T('vprofils:erreur_email_invalide');
 			
 		} elseif ($auteur['email'] == $auteur['login']) {
-			
 			// 
 			// si email=login verifier l'unicité
 			// 
 			if (sql_countsel("spip_auteurs", "(email=".sql_quote($email)." OR login=".sql_quote($email).") AND id_auteur!=".intval($id_auteur))){
 				$erreurs['email'] = _T('vprofils:erreur_email_doublon');
-				
 			}
 		}
 	}
 	
-	if (_request('service') and !_request('organisation')) {
-		$erreurs['organisation'] = _T('vprofils:erreur_si_service_organisation_nonvide');
-	}
-	
-	//
 	// Mot de passe
-	// 
 	if ($option && $option == 'password') {
 		if (_request('password') != _request('password_confirmation')){
 			$erreurs['password_confirmation'] = _T('info_passes_identiques');
@@ -287,23 +288,27 @@ function formulaires_modifier_profil_verifier_dist($id_auteur, $retour = '', $op
 			$erreurs['password_confirmation'] = _T('info_obligatoire');
 		}
 	}
-	
-	
 	return $erreurs;
 }
 
 
-
+/**
+ * Formulaire modifier profil, traitement
+ * @param  int $id_auteur
+ * @param  string $retour URL de redirection
+ * @param  string $option Si password les champs sont ajoutés
+ * @return array
+ */
 function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $option = '') {
 	if ($retour) {
 		refuser_traiter_formulaire_ajax();
 	}
 	
 	$res = array();
+	$id_auteur = intval($id_auteur);
+	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.$id_auteur);
 	
-	$type_client = _request('type_client');
-	$auteur = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
-	
+	$civilite = _request('civilite');
 	$email = _request('email');
 	$nom = _request('nom');
 	$prenom = _request('prenom');
@@ -315,77 +320,130 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 		$email_nouveau = $email;
 		
 		// 
-		// si l'email est aussi le login, alors il faut modifier
+		// si le login est identique au mail, 
+		// il faut alors modifier le premier.
 		// 
 		if ($auteur['email'] == $auteur['login']) {
+			$login_nouveau = $email_nouveau;
 			set_request('login', $email_nouveau);
 		}
 	}
 	
-	$nom_prenom = $nom.'*'.$prenom;
-	set_request('nom', $nom_prenom);
+	// Changement de Nom et/ou de Prénom ?
+	if ($nom !== nom($auteur['nom']) or $prenom !== prenom($auteur['nom'])) {
+		$nom_nouveau = $nom;
+		$prenom_nouveau = $prenom;
+		$nom_prenom = $nom.'*'.$prenom;
+		
+		// Auteur a besoin d'un champ nom
+		set_request('nom', $nom_prenom);
+	}
 	
-	// Mot de passe
+	// Saisie d'un mot de passe ?
 	if ($option && $option == 'password') {
 		$password = _request('password');
+		$password_nouveau = $password;
 		set_request('new_pass', $password);
 	}
 	
 	// 
 	// Modification des champs Auteur
 	// 
-	$res_auteur = formulaires_editer_objet_traiter('auteur', intval($id_auteur), 0, 0, $retour, '');
-	
-	if (isset($res_auteur['message_erreur'])) {
-		return $res['message_erreur'] = $res_auteur['message_erreur'];
-	} else {
-		$res['message_ok'] = $res_auteur['message_ok'];
+	if ($nom_nouveau OR $prenom_nouveau OR $email_nouveau OR $login_nouveau) {
+		$modifier_auteur = charger_fonction('editer_objet', 'action');
+		$_auteur = $modifier_auteur($id_auteur, 'auteur', array(
+			'nom' => $nom_prenom,
+			'email' => $email_nouveau,
+			'login' => $login_nouveau
+		));
+		if ($_auteur[1]) {
+			return $res['message_erreur'] = _T('spip:erreur_technique_enregistrement_impossible');
+		}
 	}
 	
 	// 
 	// Rétablir le champ Nom tel que validé par l'auteur
 	// 
 	set_request('nom', $nom);
-	
-	if ($type_client == 'contact') {
-		// 
-		// Modification des champs Contact
-		// 
-		$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.intval($id_auteur));
-		$organisation = _request('organisation');
-		$service = _request('service');
-		$res_contact = formulaires_editer_objet_traiter('contact', intval($id_contact), 0, 0, $retour, '');
-		
-		if (isset($res_contact['message_erreur'])) {
-			return $res['message_erreur'] = $res_contact['message_erreur'];
+	// 
+	// Contact
+	// 
+	if (!$contact = sql_fetsel('*', 'spip_contacts', 'id_auteur='.$id_auteur)) {
+		$definir_contact = charger_fonction('definir_contact', 'action');
+		$id_contact = $definir_contact('contact/'.$id_auteur);
+		if (!$id_contact) {
+			return $res['message_erreur'] = _T('spip:erreur_technique_enregistrement_impossible');
 		} else {
-			$res['message_ok'] = $res_auteur['message_ok'];
+			include_spip('action/editer_contact');
+			contact_modifier($id_contact, $set = array(
+				'civilite' => $civilite,
+				'prenom' => $prenom,
+				'nom' => $nom)
+			);
 		}
-	} 
+	} else {
+		if (
+			$civilite !== $contact['civilite'] 
+			or $prenom !== $contact['prenom'] 
+			or $nom !== $contact['nom']
+		) {
+			include_spip('action/editer_contact');
+			contact_modifier($contact['id_contact'], $set = array(
+				'civilite' => $civilite,
+				'prenom' => $prenom,
+				'nom' => $nom)
+			);
+		}
+	}
 	
 	// 
 	// Modification des champs Adresse
 	// 
-	$id_adresse = sql_getfetsel('id_adresse', 'spip_adresses_liens', 'id_objet='.intval($id_auteur).' AND objet='.sql_quote('auteur').' AND type='.sql_quote(_ADRESSE_TYPE_DEFAUT));
+	$set_adresse['organisation'] = _request('organisation');
+	$set_adresse['service'] = _request('service');
+	$set_adresse['voie'] = _request('voie');
+	$set_adresse['complement'] = _request('complement');
+	$set_adresse['boite_postale'] = _request('boite_postale');
+	$set_adresse['code_postal'] = _request('code_postal');
+	$set_adresse['ville'] = _request('ville');
+	$set_adresse['region'] = _request('region');
+	$set_adresse['pays'] = _request('pays');
 	
-	if (!$id_adresse) {
-		$id_adresse = 'new';
-	}
+	$adresse = sql_fetsel('*', 'spip_adresses AS adresses INNER JOIN spip_adresses_liens AS L1 ON (L1.id_adresse = adresses.id_adresse)', 'L1.id_objet='.$id_auteur.' AND L1.objet='.sql_quote('auteur'));
 	
-	$res_adresse = formulaires_editer_objet_traiter('adresse', $id_adresse);
-	
-	if ($id_adresse == 'new' AND $res_adresse['id_adresse']) {
-		include_spip('action/editer_liens');
-		objet_associer(array('adresse' => $res_adresse['id_adresse']), array('auteur' => intval($id_auteur)), array('type' => _ADRESSE_TYPE_DEFAUT));
-	}
-	
-	if (isset($res_adresse['message_erreur'])) {
-		return $res['message_erreur'] = $res_adresse['message_erreur'];
+	if (!$adresse) {
+		$inserer_adresse = charger_fonction('editer_objet', 'action');
+		$_adresse = $inserer_adresse('new', 'adresse', $set_adresse);
+		if (!$id_adresse = intval($_adresse[0])) {
+			return $res['message_erreur'] = _T('spip:erreur_technique_enregistrement_impossible');
+		} else {
+			include_spip('action/editer_liens');
+			objet_associer(
+				array('adresse' => $id_adresse),
+				array('auteur' => $id_auteur),
+				array('type' => _ADRESSE_TYPE_DEFAUT)
+			);
+		}
 	} else {
-		$res['message_ok'] = $res_adresse['message_adresse'];
+		if (
+			$adresse['organisation'] != $set_adresse['organisation']
+			or $adresse['service'] != $set_adresse['service']
+			or $adresse['voie'] != $set_adresse['voie']
+			or $adresse['boite_postale'] != $set_adresse['boite_postale']
+			or $adresse['code_postal'] != $set_adresse['code_postal']
+			or $adresse['ville'] != $set_adresse['ville']
+			or $adresse['region'] != $set_adresse['region']
+			or $adresse['pays'] != $set_adresse['pays']
+		) {
+			$modifier_adresse = charger_fonction('editer_objet', 'action');
+			$_adresse = $modifier_adresse($adresse['id_adresse'], 'adresse', $set_adresse);
+			if (!$id_adresse = intval($_adresse[0])) {
+				return $res['message_erreur'] = _T('spip:erreur_technique_enregistrement_impossible');
+			}
+		}
 	}
 
-	if (!isset($res['message_erreur']) and !isset($res['message_ok'])) {
+	if (!isset($res['message_erreur'])) {
 		$res['message_ok'] = _T('info_modification_enregistree');
 		$res['editable'] = true;
 	}

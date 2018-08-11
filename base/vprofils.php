@@ -6,7 +6,7 @@ if (!defined("_ECRIRE_INC_VERSION")) {
 
 
 function vprofils_declarer_champs_extras($champs = array()) {
-	$champs['spip_contacts']['organisation'] = array(
+	$champs['spip_adresses']['organisation'] = array(
 		'saisie' => 'input',
 		'options' => array(
 			'nom' => 'organisation',
@@ -15,12 +15,21 @@ function vprofils_declarer_champs_extras($champs = array()) {
 		)
 	);
 	
-	$champs['spip_contacts']['service'] = array(
+	$champs['spip_adresses']['service'] = array(
 		'saisie' => 'input',
 		'options' => array(
 			'nom' => 'service',
 			'label' => _T('vprofils:formulaire_service_label'),
 			'sql' => "tinytext NOT NULL DEFAULT ''"
+		)
+	);
+	
+	$champs['spip_adresses']['code_facteur'] = array(
+		'saisie' => 'input',
+		'options' => array(
+			'nom' => 'code_facteur',
+			'label' => _T('vprofils:formulaire_code_facteur_label'),
+			'sql' => "tinyint(4) NOT NULL DEFAULT 0"
 		)
 	);
 	

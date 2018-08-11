@@ -10,7 +10,7 @@ if (!defined("_ECRIRE_INC_VERSION")) {
  * @param  int $id_auteur
  * @return int
  */
-function vprofils_creer_contact($id_auteur) {
+/*function vprofils_creer_contact($id_auteur) {
 	// L'auteur a déjà un contact lié ?
 	$id_contact = sql_getfetsel('id_contact', 'spip_contacts', 'id_auteur='.$id_auteur);
 	
@@ -37,7 +37,7 @@ function vprofils_creer_contact($id_auteur) {
 	}
 	return $id_contact;
 }
-
+*/
 
 /**
  * Créer une organisation et lier à un contact existant
@@ -45,7 +45,7 @@ function vprofils_creer_contact($id_auteur) {
  * @param  int $id_contact
  * @return int
  */
-function vprofils_creer_organisation($id_contact) {
+/*function vprofils_creer_organisation($id_contact) {
 	// nom de l'organisation
 	$organisation = _request('organisation');
 	$service = (_request('service')) ? _request('service') : '';
@@ -72,7 +72,7 @@ function vprofils_creer_organisation($id_contact) {
 
 	return $id_organisation;
 }
-
+*/
 
 /**
  * À partir du nom et prénom du contact, 
@@ -87,7 +87,7 @@ function vprofils_verifier_doublons($id_contact) {
 	$nom_prenom = mb_convert_case($contact['nom'].'*'.$contact['prenom'], MB_CASE_LOWER, "UTF-8");
 	if ($auteurs = sql_allfetsel('id_auteur, nom', 'spip_auteurs', 'nom='.sql_quote($nom_prenom).' AND id_auteur!='.sql_quote(intval($contact['id_auteur'])))) {
 		foreach ($auteurs as $auteur) {
-			spip_log("Contact #$id_contact -- ".$contact['nom']." ".$contact['prenom']." -- est un doublon éventuel de l'auteur #".$auteur['id_auteur']." -- ".$auteur['nom']." -- ", "vprofils_auteurs_doublons"._LOG_INFO_IMPORTANTE);
+			spip_log("Contact #$id_contact -- ".$contact['nom']." ".$contact['prenom'].", auteur #".$contact['id_auteur']." -- est un doublon éventuel de l'auteur #".$auteur['id_auteur']." -- ".$auteur['nom']." -- ", "vprofils_auteurs_doublons"._LOG_INFO_IMPORTANTE);
 		}
 	}
 }

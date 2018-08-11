@@ -76,7 +76,6 @@ function vprofils_formulaire_charger($flux) {
 		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
 		
 		if ($formulaire_complet == 'complet') {
-			// $flux['data']['type_organisation'] = '';
 			$flux['data']['organisation'] = '';
 			$flux['data']['service'] = '';
 			$flux['data']['voie'] = '';
@@ -222,26 +221,41 @@ function vprofils_formulaire_traiter($flux) {
 	// éventuellement l'organisation, et les coordonnées postales.
 	// 
 	if ($flux['args']['form'] == 'inscription') {
-		
+		$res = array();
 		$id_auteur = intval($flux['data']['id_auteur']);
-		
-		include_spip('inc/vprofils');
+		$prenom = _request('prenom');
+		$nom = _request('nom_inscription');
+		$civilite = _request('civilite');
+	  $mail = _request('mail_inscription');
+		include_spip('inc/autoriser');
 		
 		// créer ou récupérer le contact
-		$id_contact = vprofils_creer_contact($id_auteur);
+		if (!$contact = sql_fetsel('*', 'spip_contacts', 'id_auteur='.$id_auteur)) {
+			$definir_contact = charger_fonction('definir_contact', 'action');
+			$id_contact = $definir_contact('contact/'.$id_auteur);
+			if (!$id_contact) {
+				spip_log("Erreur lors de l'inscription de $nom $prenom (login : $mail) après l'étape de création du contact. L'identifiant auteur utilisé est #$id_auteur", 'vprofils_erreurs_inscription'._LOG_ERREUR);
+				return $flux['data']['message_erreur'] = _T('vprofils:message_erreur_inscription');
+			} 
+		}
+		
+		if ($id_contact or $id_contact = $contact['id_contact']) {
+			include_spip('action/editer_contact');
+			contact_modifier($id_contact, $set = array(
+				'civilite' => $civilite,
+				'prenom' => $prenom,
+				'nom' => $nom)
+			);
+		}
 		
 		// rectifier des données de l'auteur : 
 		// - login = e-mail
 		// - nom = Nom*Prénom
 		// - mot de passe : mot de passe saisi dans le formulaire.
-		$prenom = _request('prenom');
-		$nom = _request('nom_inscription');
 		$nom_prenom = $nom.'*'.$prenom;
-		$mail = _request('mail_inscription');
 		$password = _request('password');
 		
 		// autoriser la modification de l'auteur
-		include_spip('inc/autoriser');
 		autoriser_exception('modifier', 'auteur', $id_auteur);
 		
 		// modifier les données de l'auteur
@@ -254,8 +268,13 @@ function vprofils_formulaire_traiter($flux) {
 		// retirer l'autorisation exceptionnelle
 		autoriser_exception('modifier', 'auteur', $id_auteur, false);
 		
+		if ($err) {
+			spip_log("Erreur lors de l'inscription de $nom_prenom (login : $mail) après l'étape de modification des données d'auteur. L'identifiant auteur utilisé est le $id_auteur", 'vprofils_erreurs_inscription'._LOG_ERREUR);
+			return $flux['data']['message_erreur'] = _T('vprofils:message_erreur_inscription');
+		}
 		// Vérifier si l'auteur n'existe pas déjà comme auteur Vacarme
 		// et le noter dans les logs pour un éventuel traitement ultérieur du doublon ?
+		include_spip('inc/vprofils');
 		vprofils_verifier_doublons($id_contact);
 		
 		// Formulaire simple ou complet ?
@@ -265,12 +284,22 @@ function vprofils_formulaire_traiter($flux) {
  		// $formulaire_complet = vprofils_selectionner_formulaire_inscription($page);
 		
 		if ($formulaire_complet == 'complet') {
+			$set_adresse['organisation'] = _request('organisation');
+			$set_adresse['service'] = _request('service');
+			$set_adresse['voie'] = _request('voie');
+			$set_adresse['complement'] = _request('complement');
+			$set_adresse['boite_postale'] = _request('boite_postale');
+			$set_adresse['code_postal'] = _request('code_postal');
+			$set_adresse['ville'] = _request('ville');
+			$set_adresse['region'] = _request('region');
+			$set_adresse['pays'] = _request('pays');
 			
-			// Créer l'organisation et lier au contact,
-			// si nécessaire
-			// if (_request('organisation')) {
-			// 	$id_organisation = vprofils_creer_organisation($id_contact);
-			// }
+			$adresse = sql_fetsel('*', 'spip_adresses AS adresses INNER JOIN spip_adresses_liens AS L1 ON (L1.id_adresse = adresses.id_adresse)', 'L1.id_objet='.$id_auteur.' AND L1.objet='.sql_quote('auteur'));
+			
+			if (!$adresse) {
+				$inserer_adresse = charger_fonction('editer_objet', 'action');
+				$_adresse = $inserer_adresse('new', 'adresse', $set_adresse);
+			}
 			
 			include_spip('inc/editer');
 			$res = formulaires_editer_objet_traiter('adresse', 'new');
@@ -284,7 +313,6 @@ function vprofils_formulaire_traiter($flux) {
 		// lien vers page d'identification
 		$self = _request('self');
 		
-		// TODO: vrai dans les tous cas ?
 		$url = parametre_url($self, 'formulaire', 'identification');
 
 		if (isset($flux['data']['message_ok'])) {
