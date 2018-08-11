@@ -9,8 +9,7 @@
 				<fieldset>
 					<legend><:vprofils:formulaire_compte_titre:></legend>
 					<div class="editer-groupe">
-						[(#SAISIE{radio, civilite, label=<:vprofils:formulaire_civilite_label:>, obligatoire=oui,
-							data=#ARRAY{madame, <:vprofils:formulaire_civilite_madame_label:>, monsieur, <:vprofils:formulaire_civilite_monsieur_label:>}})]
+						[(#SAISIE{civilite, civilite, label=<:vprofils:formulaire_civilite_label:>, obligatoire=oui})]
 						[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_label:>, obligatoire=oui})]
 						[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, obligatoire=oui})]
 						[(#SAISIE{email, mail_inscription, label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]

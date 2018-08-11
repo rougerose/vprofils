@@ -390,13 +390,57 @@ function vprofils_bank_traiter_reglement($flux) {
  * pour simplifier les traitements et tant que l'on ne propose pas à l'abonné 
  * d'enregistrer plusieurs adresses, téléphones, etc. 
  * Cette limitation s'applique également dans l'espace privé.
- * 
+ *
+ * @pipeline
  * @param  $flux
  * @return $flux
  */
 function vprofils_types_coordonnees($flux) {
 	foreach($flux as $coordonnees => $types) {
 		$flux[$coordonnees] = array_filter($types, function($k) {return $k == 'pref';}, ARRAY_FILTER_USE_KEY);
+	}
+	
+	return $flux;
+}
+
+
+/**
+ * Formulaires editer_contact et editer_adresse
+ *
+ * - editer_adresse : rendre le type obligatoire et choix "pref" par défaut.
+ * - editer_contact, champ civilité : remplacer le champ input par des boutons
+ * radio (madame|monsieur), ce qui permet de "normaliser" la saisie
+ * (oups ! c'est pas gender fluid !).
+ *
+ * @pipeline
+ * @param  array $flux
+ * @return array
+ */
+function vprofils_formulaire_saisies($flux) {
+	
+	if (test_espace_prive()) {
+		if ($flux['args']['form'] == 'editer_adresse') {
+			$cle_ta = array_search('type_adresse', array_column($flux['data'], 'saisie'));
+			
+			if ($cle_ta !== false) {
+				$flux['data'][$cle_ta]['options']['obligatoire'] = 'oui';
+				$flux['data'][$cle_ta]['options']['defaut'] = 'pref';
+			}
+			
+		} elseif ($flux['args']['form'] == 'editer_contact') {
+			foreach ($flux['data'] as $cle => $saisie) {
+				if ($saisie['options']['nom'] == 'civilite') {
+					$flux['data'][$cle] = array(
+						'saisie' => 'civilite',
+						'options' => array(
+							'nom' => 'civilite',
+							'label' => _T('vprofils:formulaire_civilite_label'),
+							'obligatoire' => 'oui'
+						)
+					);
+				}
+			}
+		}
 	}
 	
 	return $flux;

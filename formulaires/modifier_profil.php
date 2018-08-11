@@ -29,15 +29,11 @@ function formulaires_modifier_profil_saisies_dist($id_auteur, $retour = '', $opt
 			),
 			'saisies' => array(
 				array(
-					'saisie' => 'radio',
+					'saisie' => 'civilite',
 					'options' => array(
 						'nom' => 'civilite',
 						'label' => _T('vprofils:formulaire_civilite_label'),
-						'obligatoire' => 'oui',
-						'data' => array(
-							'madame' => _T('vprofils:formulaire_civilite_madame_label'),
-							'monsieur' => _T('vprofils:formulaire_civilite_monsieur_label')
-						)
+						'obligatoire' => 'oui'
 					)
 				),
 				array(

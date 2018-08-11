@@ -25,7 +25,9 @@
 	<utilise nom="commandes" />
 	<utilise nom="facteur" />
 	
+	<pipeline nom="declarer_champs_extras" inclure="base/vprofils.php" />
 	<pipeline nom="autoriser" inclure="vprofils_autorisations.php" />
+	<pipeline nom="formulaire_saisies" inclure="vprofils_pipelines.php" />
 	<pipeline nom="formulaire_charger" inclure="vprofils_pipelines.php" />
 	<pipeline nom="formulaire_verifier" inclure="vprofils_pipelines.php" />
 	<pipeline nom="formulaire_traiter" inclure="vprofils_pipelines.php" />
@@ -33,7 +35,6 @@
 	<pipeline nom="trig_bank_reglement_en_attente" inclure="vprofils_pipelines.php" />
 	<pipeline nom="bank_traiter_reglement" inclure="vprofils_pipelines.php" />
 	<pipeline nom="types_coordonnees" inclure="vprofils_pipelines.php" />
-	<pipeline nom="declarer_champs_extras" inclure="base/vprofils.php" />
 	
 	<menu nom="configurer_vprofils" titre="vprofils:vprofils_titre" parent="menu_configuration" icone="images/vprofils-16.png" />
 </paquet>

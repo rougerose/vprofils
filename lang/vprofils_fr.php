@@ -9,6 +9,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// C
 	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séparées par une virgule",
 	'cfg_vendeur_label' => "Destinataires",
+	
+	'info_civilite_madame' => "Madame",
+	'info_civilite_monsieur' => "Monsieur",
 
 	'compte_inscription_intertitre' => "Vous n'avez pas encore de compte&nbsp;?",
 	'compte_inscription_info'    => "Créez votre compte",
