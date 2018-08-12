@@ -63,6 +63,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_nom_organisation_label'         => "Le nom de l'entreprise, de l'association ou de l'institution",
 	'formulaire_nom_tiers_label'                => "Son nom",
 	'formulaire_organisation_label'             => "Société, association ou organisation",
+	'formulaire_organisation_label_court'             => "Organisation",
 	'formulaire_pays_label'                     => "Pays",
 	'formulaire_prenom_label'                   => "Prénom",
 	'formulaire_prenom_tiers_label'             => "Son prénom",
