@@ -45,6 +45,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_civilite_madame_label'    => "Madame",
 	'formulaire_civilite_monsieur_label'  => "Monsieur",
 	'formulaire_choixabo_label'  => "Veuillez choisir un abonnement parmi ceux enregistrés dans votre commande",
+	'formulaire_code_facteur_label' => "Code facteur",
 	'formulaire_code_postal_label'        => "Code postal",
 	'formulaire_complement_label'         => "Complément d'adresse",
 	'formulaire_compte_titre'             => "Vos informations personnelles",
