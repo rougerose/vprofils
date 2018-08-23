@@ -1,0 +1,37 @@
+[(#REM) Inclusion utilisée à l'étape 2 du formulaire offrir_abonnement de vabonnements ]
+<div class="formulaire__groupe formulaire__groupe--identite">
+	<fieldset>
+		<legend><:vprofils:formulaire_compte_tiers_titre:></legend>
+		<div class="editer-groupe">
+			[(#SAISIE{civilite, civilite, label=<:vprofils:formulaire_civilite_label:>, obligatoire=oui})]
+			[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_label:>, obligatoire=oui})]
+			[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, obligatoire=oui})]
+			[(#SAISIE{email, mail_inscription, label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]
+		</div>
+	</fieldset>
+</div>
+<div class="formulaire__groupe formulaire__groupe--adresse">
+	<fieldset>
+		<legend><:vprofils:formulaire_coordonnees_tiers_titre:></legend>
+		<div class="editer-groupe">
+			[(#SAISIE{input, organisation, label=<:vprofils:formulaire_organisation_label:>})]
+			[(#SAISIE{input, service, label=<:vprofils:formulaire_service_label:>})]
+			[(#SAISIE{input, voie, label=<:vprofils:formulaire_voie_label:>, obligatoire=oui})]
+			[(#SAISIE{input, complement, label=<:vprofils:formulaire_complement_label:>})]
+			[(#SAISIE{input, boite_postale, label=<:vprofils:formulaire_boite_postale_label:>})]
+			[(#SAISIE{input, code_postal, label=<:vprofils:formulaire_code_postal_label:>, obligatoire=oui})]
+			[(#SAISIE{input, ville, label=<:vprofils:formulaire_ville_label:>, obligatoire=oui})]
+			[(#SAISIE{input, region, label=<:vprofils:formulaire_region_label:>})]
+			[(#SAISIE{pays, pays, label=<:vprofils:formulaire_pays_label:>, defaut=FR, obligatoire=oui, code_pays=oui})]
+		</div>
+	</fieldset>
+</div>
+<div class="formulaire__groupe">
+	<fieldset>
+		<div class="editer-groupe">
+			[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, rows=10})]
+			[(#SET{dates, #ARRAY})][(#SET{dates, #GET{dates}|liste_dates})]
+			[(#SAISIE{selection, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, obligatoire=oui, data=#GET{dates}})]
+		</div>
+	</fieldset>
+</div>

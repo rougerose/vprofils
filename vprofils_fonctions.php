@@ -78,7 +78,7 @@ function nom($texte) {
 
 
 /**
- * Liste de dates depuis demain jusque dans 6 mois.
+ * Liste de dates depuis demain jusque dans 3 mois.
  *
  * Ce filtre est utilisé dans la saisie message_date_envoi
  * du formulaire inscription_tiers
@@ -89,7 +89,7 @@ function nom($texte) {
 function liste_dates($tableau) {
 	if (is_array($tableau)) {
 		$begin = new DateTime('now +0day');
-		$end   = new DateTime('now +6months');
+		$end   = new DateTime('now +3months');
 
 		for($i = $begin; $i <= $end; $i->modify('+1 day')){
 			$tableau[$i->format("U")] = affdate($i->format("Y-m-d H:i:s"));
