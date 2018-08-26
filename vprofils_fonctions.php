@@ -97,3 +97,9 @@ function liste_dates($tableau) {
 	}
 	return $tableau;
 }
+
+
+function vprofils_supprimer_accents($texte) {
+	include_spip('inc/vprofils_accents');
+	return vprofils_remove_accents($texte);
+}
