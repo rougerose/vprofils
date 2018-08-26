@@ -31,7 +31,7 @@
 		<div class="editer-groupe">
 			[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, rows=10})]
 			[(#SET{dates, #ARRAY})][(#SET{dates, #GET{dates}|liste_dates})]
-			[(#SAISIE{selection, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, obligatoire=oui, data=#GET{dates}})]
+			[(#SAISIE{selection, date_message, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, obligatoire=oui, data=#GET{dates}})]
 		</div>
 	</fieldset>
 </div>
