@@ -20,7 +20,6 @@
 	<necessite nom="vabonnements" />
 	<necessite nom="cextras" />
 	
-	<utilise nom="nospam" />
 	<utilise nom="bank" />
 	<utilise nom="commandes" />
 	<utilise nom="facteur" />
