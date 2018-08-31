@@ -16,36 +16,21 @@ function vprofils_verifier_ou_creer_auteur_tiers($champs) {
 	
 	if (!$id_auteur) {
 		
-		include_spip("action/editer_auteur");
-		$id_auteur = auteur_inserer();
+		$nom = $champs['nom_inscription'].'*'.$champs['prenom'];
+		$login = $champs['mail_inscription'];
+		$email = $champs['mail_inscription'];
+		$statut = '6forum';
 		
-		if ($id_auteur) {
-			
-			$set = array(
-				'nom' => $champs['nom_inscription'].'*'.$champs['prenom'],
-				'login' => $champs['mail_inscription'],
-				'email' => $champs['mail_inscription'],
-				'statut' => '6forum',
-			);
-			
-			autoriser_exception('modifier','auteur',$id_auteur);
-			autoriser_exception('instituer','auteur',$id_auteur);
-			auteur_modifier($id_auteur, $set);
-			autoriser_exception('modifier','auteur',$id_auteur,false);
-			autoriser_exception('instituer','auteur',$id_auteur,false);
-			
-			// Verifier
-			$row = sql_fetsel('*', 'spip_auteurs', 'id_auteur='.intval($id_auteur));
-			
-			if (!$row['login'] OR !$row['email']) {
-				spip_log("Erreur lors de la création du profil auteur tiers $id_auteur".var_export($champs, true), 'vprofils'._LOG_ERREUR);
-				
-				return false;
-			}
-			
-			return $id_auteur;
+		$inscrire_auteur = charger_fonction('inscrire_auteur', 'action');
+		
+		$auteur = $inscrire_auteur($statut, $email, $nom, array('login' => $login));
+		
+		if (!is_array($auteur)) {
+			spip_log("Erreur lors de la création du profil auteur tiers ".var_export($champs, true), 'vprofils'._LOG_ERREUR);
+			return false;
 		}
-		return false;
+		
+		$id_auteur = $auteur['id_auteur'];
 	}
 	
 	return $id_auteur;
