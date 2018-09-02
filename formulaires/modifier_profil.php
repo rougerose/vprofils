@@ -450,7 +450,7 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 	
 	if ($retour) {
 		$res['redirect'] = $retour;
-		$res['editable'] = true;
+		// $res['editable'] = true;
 	}
 	
 	return $res;
