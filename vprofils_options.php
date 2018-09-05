@@ -9,6 +9,24 @@ if (!defined('_ADRESSE_TYPE_DEFAUT')) {
 	define('_ADRESSE_TYPE_DEFAUT', 'pref'); // principale
 }
 
+/**
+ * Autorisation instituer commandes
+ *
+ * Pour interdire de changer le statut d'une commande depuis l'espace privé. 
+ * Le changement de statut doit passer par les actions programmées uniquement.
+ * 
+ * @param  [type] $faire [description]
+ * @param  [type] $type  [description]
+ * @param  [type] $id    [description]
+ * @param  [type] $qui   [description]
+ * @param  [type] $opt   [description]
+ * @return [type]        [description]
+ */
+function autoriser_commande_instituer($faire, $type, $id, $qui, $opt){
+	return false;
+}
+
+
 
 /**
  * Inscription : envoyer les identifiants par mail.
@@ -32,7 +50,7 @@ if (!defined('_ADRESSE_TYPE_DEFAUT')) {
  * @return array
  */
 function envoyer_inscription($desc, $nom, $mode, $options) {
-	include_spip('action/editer_auteur');
+	//include_spip('action/editer_auteur');
 	$envoyer_mail = true;
 	
 	// 
@@ -41,7 +59,7 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 	
 	// 
 	// Récupérer le nom du formulaire et le champ pgp d'identification du bénéficiaire
-	$form = _request('formulaire_action');
+	$form = _request('action');
 	// $options_abo = _request('options_abonnement');
 	
 	// 
@@ -52,7 +70,7 @@ function envoyer_inscription($desc, $nom, $mode, $options) {
 		// Si l'inscription est celle du bénéficiaire d'un abonnement offert,
 		// on bloque l'envoi du mail automatique à cette étape de l'inscription.
 		// 
-		if ($form == 'valider_panier') {
+		if ($form == 'api_bank') {
 			// 
 			// La notification par mail de l'inscription ne doit pas lui
 			// être envoyée tout de suite. 
