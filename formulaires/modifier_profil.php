@@ -409,7 +409,9 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 	$set_adresse['region'] = _request('region');
 	$set_adresse['pays'] = _request('pays');
 	
-	$adresse = sql_fetsel('*', 'spip_adresses AS adresses INNER JOIN spip_adresses_liens AS L1 ON (L1.id_adresse = adresses.id_adresse)', 'L1.id_objet='.$id_auteur.' AND L1.objet='.sql_quote('auteur'));
+	$type_adresse = _ADRESSE_TYPE_DEFAUT;
+	
+	$adresse = sql_fetsel('*', 'spip_adresses AS adresses INNER JOIN spip_adresses_liens AS L1 ON (L1.id_adresse = adresses.id_adresse)', 'L1.id_objet='.$id_auteur.' AND L1.objet='.sql_quote('auteur').' AND L1.type='.sql_quote($type_adresse));
 	
 	if (!$adresse) {
 		$inserer_adresse = charger_fonction('editer_objet', 'action');
@@ -421,7 +423,7 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 			objet_associer(
 				array('adresse' => $id_adresse),
 				array('auteur' => $id_auteur),
-				array('type' => _ADRESSE_TYPE_DEFAUT)
+				array('type' => $type_adresse),
 			);
 		}
 	} else {

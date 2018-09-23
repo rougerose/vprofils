@@ -226,7 +226,7 @@ function vprofils_formulaire_traiter($flux) {
 		$prenom = _request('prenom');
 		$nom = _request('nom_inscription');
 		$civilite = _request('civilite');
-	  $mail = _request('mail_inscription');
+		$mail = _request('mail_inscription');
 		include_spip('inc/autoriser');
 		
 		// créer ou récupérer le contact
