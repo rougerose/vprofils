@@ -18,7 +18,7 @@
 									<:vpaniers:commande_recap_abonnement_offert{descriptif=#GET{descriptif}, numeros=#GET{numeros}, beneficiaire=#GET{beneficiaire}}:>
 								][
 								(#DESCRIPTIF|match{offert@}|non)
-									[(#SET{numero_debut, #NUMERO_DEBUT|calculer_numero_futur_titre{0}})]
+									[(#SET{numero_debut, #VAL{Vacarme }|concat{#NUMERO_DEBUT}})]
 									[(#SET{descriptif, #DESCRIPTIF*|supprimer_numero})]
 									<:vpaniers:commande_recap_abonnement_perso{descriptif=#GET{descriptif}, numero_debut=#GET{numero_debut}, numeros=#GET{numeros}}:>
 								]

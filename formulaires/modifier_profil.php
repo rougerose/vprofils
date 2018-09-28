@@ -423,7 +423,7 @@ function formulaires_modifier_profil_traiter_dist($id_auteur, $retour = '', $opt
 			objet_associer(
 				array('adresse' => $id_adresse),
 				array('auteur' => $id_auteur),
-				array('type' => $type_adresse),
+				array('type' => $type_adresse)
 			);
 		}
 	} else {
