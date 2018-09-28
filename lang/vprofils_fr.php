@@ -22,7 +22,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'compte_titre_lien_section_motdepasse' => "Votre <span>mot de passe</span>",
 	'compte_titre_page_section_abonnement' => "Votre abonnement",
 	'compte_titre_page_section_informations' => "Modifier vos informations personnelles",
-	'compte_titre_page_section_motdepasse' => "Modifier votre mot de passe",
+	'compte_titre_page_section_motdepasse' => "Modifier le mot de passe de votre compte",
 	'compte_section_login_titre' => "Identifiez-vous pour accéder à votre compte",
 	
 	// E
@@ -83,11 +83,12 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'info_manquante_civilite'    => 'votre civilité',
 	'info_manquante_code_postal' => 'votre code postal',
 	'info_manquante_email'       => 'votre adresse e-mail',
-	'info_confirmer_passe'       => 'Confirmer votre mot de passe',
+	'info_confirmer_passe'       => 'Confirmer votre nouveau mot de passe',
 	'info_manquante_pays'        => 'votre pays',
 	'info_manquante_prenom'      => 'votre prénom',
 	'info_manquante_ville'       => 'votre ville',
 	'info_manquante_voie'        => 'votre adresse',
+	'info_nouveau_passe' => 'Votre nouveau mot de passe',
 	'info_revenir_page_principale' => "&#8592; Revenir à la page principale",
 	
 	// M
@@ -97,7 +98,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'message_erreur_formulaire_inscription' => "Votre inscription ne peut être enregistrée en raison d'un problème technique.",
 	'message_erreur_formulaire_inscription_tiers_email_deja'         => "Cette personne est déjà inscrite sur notre site. Pour terminer votre commande, <a href='@url@' class='suite-lien'>veuillez nous contacter <em>&#8594;</em></a>",
 	'message_erreur_formulaire_inscription_tiers_id_payeur_manquant' => "Votre commande ne peut être enregistrée. <a href='@url@' class='suite-lien'>Veuillez recommencer <em>&#8594;</em></a>",
-	'message_ok_formulaire_inscription'                              => "Votre compte est créé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier <em>&#8594;</em></a>",
+	'message_ok_formulaire_inscription'                              => "Votre compte est créé.<br/><a href='@url@' class='suite-lien'>Veuillez maintenant vous identifier.</a>",
 	'message_ok_formulaire_inscription_tiers'                        => "Les informations relatives au bénéficiaire sont bien enregistrées",
 	'mail_inscription_objet' => "Votre compte est créé",
 	

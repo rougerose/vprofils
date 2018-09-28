@@ -15,7 +15,7 @@ function formulaires_modifier_motdepasse_saisies_dist($id_auteur = 0) {
 			'saisie' => 'input',
 			'options' => array(
 				'nom' => 'password',
-				'label' => _T('entree_mot_passe'),
+				'label' => _T('vprofils:info_nouveau_passe'),
 				'obligatoire' => 'oui',
 				'type' => 'password',
 			)
