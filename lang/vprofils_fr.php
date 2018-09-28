@@ -5,6 +5,8 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// B
 	'bouton_deconnexion' => "Déconnexion",
+	'bouton_sinscrire' => "S’inscrire",
+	'bouton_creer_compte' => "Créer votre compte",
 	
 	// C
 	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séparées par une virgule",
@@ -92,6 +94,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'info_revenir_page_principale' => "&#8592; Revenir à la page principale",
 	
 	// M
+	'mentions_confidentialite' => "En cliquant sur « Créer votre compte », vous confirmez que vous acceptez les <a href='@url@' class='c-lien'>Conditions générales d'utilisation et notre politique de confidentialité</a> qui vous informe des modalités de traitement de vos données personnelles ainsi que de vos droits sur ces données. <br>Vos coordonnées et informations personnelles ne font l'objet d'aucune commercialisation.",
 	'message_attention_compte_incomplet'                             => "Des informations sont manquantes dans votre compte. Avant de poursuivre, veuillez compléter : ",
 	'message_bonjour' => "Bonjour, ",
 	'message_erreur_formulaire_inscription_tiers'                    => "Les informations relatives au bénéficiaire de votre cadeau n'ont pu être enregistrées. Pour terminer votre commande, <a href='@url@' class='suite-lien'>Veuillez nous contacter <em>&#8594;</em></a>",
