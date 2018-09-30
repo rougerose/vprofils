@@ -7,24 +7,26 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'bouton_deconnexion' => "Déconnexion",
 	'bouton_sinscrire' => "S’inscrire",
 	'bouton_creer_compte' => "Créer votre compte",
+	'bouton_autres_modes_paiement' => "Payer avec un autre mode de paiement",
 	
 	// C
 	'cfg_vendeur_explication' => "Destinataires des notifications adressées à Vacarme. Adresses mails séparées par une virgule",
 	'cfg_vendeur_label' => "Destinataires",
-	
-	'info_civilite_madame' => "Madame",
-	'info_civilite_monsieur' => "Monsieur",
-
 	'compte_inscription_intertitre' => "Vous n'avez pas encore de compte&nbsp;?",
 	'compte_inscription_info'    => "Créez votre compte",
 	'compte_identification_intertitre' => "Vous avez déjà un compte&nbsp;?",
 	'compte_identification_info' => "Identifiez-vous",
 	'compte_titre_lien_section_abonnement' => "Votre <span>abonnement</span>",
 	'compte_titre_lien_section_informations' => "Vos <span>informations personnelles</span>",
+	'compte_titre_lien_section_commandes' => "Vos <span>commandes</span>",
 	'compte_titre_lien_section_motdepasse' => "Votre <span>mot de passe</span>",
+	'compte_titre_page_compte' => "Votre compte",
 	'compte_titre_page_section_abonnement' => "Votre abonnement",
+	'compte_titre_page_section_commande' => 'Votre commande ',
+	'compte_titre_page_section_commandes' => "Vos commandes",
 	'compte_titre_page_section_informations' => "Modifier vos informations personnelles",
 	'compte_titre_page_section_motdepasse' => "Modifier le mot de passe de votre compte",
+	'compte_titre_paiement' => "Paiement",
 	'compte_section_login_titre' => "Identifiez-vous pour accéder à votre compte",
 	
 	// E
@@ -80,6 +82,20 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'formulaire_voie_label'                     => "Adresse",
 	
 	// I
+	'info_civilite_madame' => "Madame",
+	'info_civilite_monsieur' => "Monsieur",
+	'info_commande_aucune' => "Aucune commande associée à votre compte.",
+	'info_commande_inaccessible' => "Cette commande ne peut être affichée.",
+	'info_commande_statut_paye' => "Payée",
+	'info_commande_statut_attente' => "En attente de paiement",
+	'info_commande_statut_encours' => "En cours",
+	'info_commande_statut_envoyee' => "Payée et envoyée",
+	'info_mode_paiement' => "Mode de paiement",
+	'info_paiement' => "État du paiement",
+	'info_paiement_attente' => "En attente",
+	'info_paiement_paye' => "Payé",
+	'info_voir_facture_proforma' => "Voir la facture proforma <em>&#8594;</em>",
+	'info_voir_facture' => "Voir la facture <em>&#8594;</em>",
 	// TODO: à supprimer ?
 	'info_manquante_adresse'     => 'vos coordonnées',
 	'info_manquante_civilite'    => 'votre civilité',

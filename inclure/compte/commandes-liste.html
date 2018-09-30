@@ -1,0 +1,33 @@
+<section class="c-section">
+	<h2 class="c-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:compte_titre_page_section_commandes:></h2>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})">&#8592; Revenir à la page principale</a></p>]
+	<B_commandes_liste>
+		<table class="c-table">
+			<thead class="c-table__head">
+				<tr>
+					<th>Date</th>
+					<th>Numéro de commande</th>
+					<th>Montant</th>
+					<th>Statut</th>
+					<th>Mode de règlement</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody class="c-table__body">
+				<BOUCLE_commandes_liste(COMMANDES){id_auteur}{par date}>
+					<tr>
+						<td>[(#DATE|affdate)]</td>
+						<td>[(#REFERENCE)]</td>
+						<td>[(#PRIX*{commande, #ID_COMMANDE}|prix_formater)]</td>
+						<td><:vprofils:info_commande_statut_{=#STATUT}:></td>
+						<td>[(#STATUT|=={encours}|non)[(#MODE|appliquer_filtre{bank_titre_type_paiement})]]</td>
+						<td>[(#STATUT|=={encours}|non)<a href="[(#SELF|parametre_url{objet, commande}|parametre_url{id_objet, #ID_COMMANDE})]" class="c-lien">\[Détail de la commande\]</a>]</td>
+					</tr>
+				</BOUCLE_commandes_liste>
+			</tbody>
+		</table>
+		[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})">&#8592; Revenir à la page principale</a></p>]
+	</B_commandes_liste>
+		<p class="c-message c-message--info"><:vprofils:info_commande_aucune:></p>
+	<//B_commandes_liste>
+</section>

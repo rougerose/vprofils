@@ -1,0 +1,32 @@
+<section class="c-section">
+	<BOUCLE_commande(COMMANDES){id_auteur}{id_commande}{statut !IN encours}>
+		<h2 class="c-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:compte_titre_page_section_commande:>[ n<sup>o</sup> (#REFERENCE)]</h2>
+		[<p><a class="c-lien" href="(#SELF|parametre_url{objet, ''}|parametre_url{id_objet, ''})">&#8592; Revenir à la liste de vos commandes</a></p>]
+		<div class="c-compte-commande">
+			<div class="c-compte-commande__articles">
+				<INCLURE{fond=inclure/commande/contenu, id_commande}/>
+			</div>
+			<div class="c-compte-commande__paiement">
+				<section class="c-section c-commande-section">
+					<h2 class="c-section__titre--small c-commande-section__titre u-typo-font-vacarme"><:vprofils:compte_titre_paiement:></h2>
+					<p class="c-compte-commande__info u-typo-font-vacarme"><span class="c-compte-commande__intitule"><:vprofils:info_mode_paiement:></span> <span class="c-compte-commande__mode-paiement u-typo-upper">[ (#MODE|appliquer_filtre{bank_titre_type_paiement})]</span></p>
+					<p class="c-compte-commande__info u-typo-font-vacarme"><span class="c-compte-commande__intitule"><:vprofils:info_paiement:></span> <span class="c-compte-commande__mode-paiement u-typo-upper"><:vprofils:info_paiement_{=#STATUT}:></span></p>
+					<BOUCLE_transaction(TRANSACTIONS){id_commande}>
+						<BOUCLE_facture_pf(factures_proforma){id_transaction}>[(#SET{id_facture_pf, #ID_FACTURE_PROFORMA})][(#SET{hash, #DETAILS|md5})]</BOUCLE_facture_pf>
+						[(#STATUT|=={attente}|oui)
+							[<p><a href="(#URL_PAGE{transaction}|parametre_url{id_transaction, #ID_TRANSACTION}|parametre_url{transaction_hash, #TRANSACTION_HASH})" class="c-btn c-btn--submit c-btn--round c-btn--primaire u-typo-font-vacarme c-btn--upper"><:vprofils:bouton_autres_modes_paiement:></a></p>]
+							[(#GET{id_facture_pf}|oui)
+								[<p><a href="(#URL_PAGE{facture_proforma}|parametre_url{id_facture_proforma, #GET{id_facture_pf}}|parametre_url{hash, #GET{hash}})" target="_blank" class="c-lien"><:vprofils:info_voir_facture_proforma:></a></p>]
+							]
+						][(#STATUT|=={ok}|et{#REGLEE|=={oui}})
+							[<p><a href="(#URL_PAGE{facture}|parametre_url{id_facture, #ID_FACTURE}|parametre_url{hash, #INFO_DETAILS{facture, #ID_FACTURE}|md5})" target="_blank" class="c-lien"><:vprofils:info_voir_facture:></a></p>]
+						]
+					</BOUCLE_transaction>
+				</section>
+			</div>
+		</div>
+	</BOUCLE_commande>
+	<p class="c-message c-message--info"><:vprofils:info_commande_inaccessible:></p>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{objet, ''}|parametre_url{id_objet, ''})">&#8592; Revenir à la liste de vos commandes</a></p>]
+	<//B_commande>
+</section>

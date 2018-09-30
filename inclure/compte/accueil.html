@@ -1,7 +1,6 @@
-#SET{sections, #ARRAY{1, informations, 2, motdepasse}}
 <B_sections>
 	<ul class="c-header__list u-typo-font-vacarme u-typo-upper">
-		<BOUCLE_sections(DATA){source tableau, #GET{sections}}>
+		<BOUCLE_sections(DATA){source tableau, #ENV{sections}}>
 			[<li class="c-header__list-item"><a href="(#SELF|parametre_url{section, #VALEUR})"><:vprofils:compte_titre_lien_section_{=#VALEUR}:></a></li>]
 		</BOUCLE_sections>
 	</ul>
