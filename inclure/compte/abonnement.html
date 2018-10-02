@@ -1,0 +1,31 @@
+<section class="c-section">
+	<h2 class="c-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:compte_titre_page_section_abonnement:></h2>
+	<B_abonnements_encours>
+		<section class="c-section c-compte-section c-compte-abonnements">
+			<h3 class="c-compte-section__titre--s u-typo-font-vacarme">[(#TOTAL_BOUCLE|singulier_ou_pluriel{abonnement:info_1_abonnement_encours, abonnement:info_nb_abonnements_encours})]</h3>
+			<ul class="o-list-bare c-compte-abonnements__liste">
+				<BOUCLE_abonnements_encours(ABONNEMENTS){id_auteur}{statut=actif}>
+				[(#SET{duree, #DUREE_ECHEANCE|intval})]
+				<li class="o-list-bare__item"><strong>[Abonnement (#INFO_TITRE{abonnements_offre, #ID_ABONNEMENTS_OFFRE})]</strong> <:abonnement:formulaire_abonnement_duree_{=#GET{duree}}:>.[ De <em>Vacarme (#NUMERO_DEBUT)</em>][ à <em>Vacarme (#NUMERO_FIN)</em>]</li>
+				</BOUCLE_abonnements_encours>
+			</ul>
+		</section>
+	</B_abonnements_encours>
+		<section class="c-section c-compte-section">
+			<h3 class="c-compte-section__titre--s u-typo-font-vacarme"><:abonnement:info_0_abonnement_encours:></h3>
+			<INCLURE{fond=inclure/promo-abonnements}/>
+		</section>
+	<//B_abonnements_encours>
+	<B_abonnements_echus>
+		<section class="c-section c-compte-section">
+			<h3 class="c-compte-section__titre--s u-typo-font-vacarme">[(#TOTAL_BOUCLE|singulier_ou_pluriel{abonnement:info_1_abonnement_echu, abonnement:info_nb_abonnements_echus})]</h3>
+			<ul class="o-list-bare c-compte-abonnements__liste">
+				<BOUCLE_abonnements_echus(ABONNEMENTS){id_auteur}{statut=resilie}>
+					[(#SET{duree, #DUREE_ECHEANCE|intval})]
+					<li class="o-list-bare__item"><strong>[Abonnement (#INFO_TITRE{abonnements_offre, #ID_ABONNEMENTS_OFFRE})]</strong> <:abonnement:formulaire_abonnement_duree_{=#GET{duree}}:>.[ De <em>Vacarme (#NUMERO_DEBUT)</em>][ à <em>Vacarme (#NUMERO_FIN)</em>]</li>
+				</BOUCLE_abonnements_echus>
+			</ul>
+		</section>
+	</B_abonnements_echus>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})">&#8592; Revenir à la page principale</a></p>]
+</section>
