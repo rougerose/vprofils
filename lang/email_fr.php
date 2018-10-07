@@ -103,7 +103,7 @@ Veuillez envoyer votre chèque à l’adresse suivante : «@adresse@».",
 
 	'confirmation_activation_numero_actuel' => 'Votre abonnement est maintenant actif.
 
-	Vous recevrez votre exemplaire de <em>@titre_numero_encours@</em>, le numéro que vous avez choisi pour débuter votre abonnement, dans quelques jours.
+	Vous recevrez votre exemplaire de <em>@titre_numero_encours@</em>, le premier numéro de votre abonnement, dans quelques jours.
 
 	Nous vous remercions de votre soutien.',
 
@@ -113,7 +113,7 @@ Veuillez envoyer votre chèque à l’adresse suivante : «@adresse@».",
 
 
 
-Vous recevrez votre exemplaire de <em>@titre_numero_prochain@</em>, le numéro que vous avez choisi pour débuter votre abonnement, dès qu’il sera disponible.
+Vous recevrez votre exemplaire de <em>@titre_numero_prochain@</em>, le premier numéro de votre abonnement, dès qu’il sera disponible.
 
 Nous vous souhaitons par avance une bonne lecture.',
 

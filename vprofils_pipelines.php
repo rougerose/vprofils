@@ -402,7 +402,7 @@ function vprofils_bank_traiter_reglement($flux) {
 		// Notifier Vacarme, dans tous les cas.
 		$notifications('commande_vendeur_reglement', $id_commande, $options);
 		
-		// Si la commande ne contient un abonnement de type permanent ou obligatoire,
+		// Si la commande ne contient pas un abonnement de type permanent ou obligatoire,
 		// notifier le client
 		if (!sql_countsel('spip_commandes_details', sql_in('id_objet', $offres_obligatoires).' AND id_commande='.$id_commande.' AND objet='.sql_quote('abonnements_offre'))) {
 			$notifications('commande_client_reglement', $id_commande, $options);

@@ -20,7 +20,10 @@
 				<div class="ajax">
 					[(#FORMULAIRE_INSCRIPTION{6forum})]
 				</div>
-				<p class="c-compte__mentions"><:vprofils:mentions_confidentialite{url=#URL_PAGE{confidentialite}}:></p>
+				<div class="c-mentions">
+					[(#SET{label_bouton, <:vprofils:bouton_creer_compte:>})]
+					<p class="c-mentions__texte"><:vprofils:mentions_confidentialite{url=#URL_PAGE{confidentialite}, label_bouton=#GET{label_bouton}}:></p>
+				</div>
 			</section>
 			<section class="c-compte-section c-compte-identification__section c-compte-identification__section--login">
 				<h3 class="c-compte-section__titre c-compte-section__titre--s u-typo-font-vacarme"><:vprofils:compte_identification_intertitre:></h3>
