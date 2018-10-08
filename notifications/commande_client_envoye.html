@@ -1,0 +1,21 @@
+<BOUCLE_commande(COMMANDES){id_commande}{statut?}{tout}>
+	<BOUCLE_contact_auteur(CONTACTS){id_auteur}>
+		#SET{auteur_civilite, #CIVILITE}
+		#SET{auteur_prenom, #PRENOM}
+		#SET{auteur_nom, #NOM}
+	</BOUCLE_contact_auteur>
+		[(#SET{auteur_prenom, #NOM|prenom})]
+		[(#SET{auteur_nom, #NOM|nom})]
+	<//B_contact_auteur>
+<title>[(#NOM_SITE_SPIP)] : votre commande est en cours d'expédition</title>
+<body>
+	[(#GET{auteur_civilite}|oui)<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
+	[(#GET{auteur_civilite}|non)<p><:email:bonjour:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom})],</p>]
+	<p><:email:commande_envoi_confirmation:></p>
+	<p><:email:politesse_signature:></p>
+	<hr />
+	[(#INCLURE{fond=inclure/notifications/recapitulatif_commande, id_commande})]
+	<hr />
+</body>
+</BOUCLE_commande>
+#FILTRE{facteur_email_wrap_to_html}

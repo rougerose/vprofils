@@ -9,6 +9,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// C
 	'cher_chere_madame' => "Chère",
 	'cher_chere_monsieur' => "Cher",
+	
+	
+	'commande_envoi_confirmation' => "Votre commande, détaillée ci-dessous, est en cours d'expédition par courrier postal.",
 
 
 
@@ -56,7 +59,13 @@ Veuillez envoyer votre chèque à l’adresse suivante : «@adresse@».",
 	Nous traitons votre commande dans les meilleurs délais et vous recevrez un email lorsqu’elle sera expédiée par courrier postal.
 	
 	Nous vous remercions de votre soutien.",
-
+	
+	
+	'commande_client_reglement_tous' => "Votre réglement pour la commande n<sup>o</sup>&nbsp;@reference@ a bien été enregistré.
+	
+	Nous traitons votre commande dans les meilleurs délais et vous recevrez un email lorsqu’elle sera expédiée par courrier postal.
+	
+	Nous vous remercions de votre soutien.",
 
 
 	'commande_client_reglement_gratuit' => "Nous avons le plaisir de vous offrir un abonnement à Vacarme. 
@@ -69,7 +78,7 @@ Veuillez envoyer votre chèque à l’adresse suivante : «@adresse@».",
 
 
 
-	'commande_client_reglement_objet' => "Votre commande sur @nom_site@",
+	'commande_client_reglement_objet' => "Votre règlement a bien été enregistré",
 
 
 
