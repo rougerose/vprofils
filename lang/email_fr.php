@@ -101,9 +101,18 @@ Veuillez envoyer votre chèque à l’adresse suivante : «@adresse@».",
 	'commande_vendeur_reglement_gratuit' => "La commande n<sup>o</sup>&nbsp;@reference@ au nom de @auteur@ vient d’être enregistrée. 
 	
 	La transaction n<sup>o</sup>&nbsp;@transaction@ est gratuite.",
+	
+	
+	'commande_vendeur_reglement_cheque' => "La commande n<sup>o</sup>&nbsp;@reference@ au nom de @auteur@ vient d’être enregistrée. 
+	
+	La transaction n<sup>o</sup>&nbsp;@transaction@ est réglée.",
 
+	
+	'commande_vendeur_reglement_virement' => "La commande n<sup>o</sup>&nbsp;@reference@ au nom de @auteur@ vient d’être enregistrée. 
+	
+	La transaction n<sup>o</sup>&nbsp;@transaction@ est réglée.",
 
-
+	
 	'commande_vendeur_reglement_simu' => "La commande n<sup>o</sup>&nbsp;@reference@ au nom de @auteur@ vient d’être enregistrée. 
 	
 	La transaction n<sup>o</sup>&nbsp;@transaction@ est réglée.",
