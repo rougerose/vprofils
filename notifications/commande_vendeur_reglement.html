@@ -1,0 +1,25 @@
+<BOUCLE_commande_attente(COMMANDES){id_commande}>
+	<BOUCLE_auteur(AUTEURS){id_auteur}>
+		<BOUCLE_contact(CONTACTS){id_auteur}>
+			#SET{auteur_civilite, #CIVILITE}
+			#SET{auteur_prenom, #PRENOM}
+			#SET{auteur_nom, #NOM}
+		</BOUCLE_contact>
+			#SET{auteur_civilite, ''}
+			[(#SET{auteur_prenom, #NOM|prenom})]
+			[(#SET{auteur_nom, #NOM|nom})]
+		<//B_contact>
+	</BOUCLE_auteur>
+	<BOUCLE_transaction(TRANSACTIONS){id_commande}>
+		#SET{transaction, #ID_TRANSACTION}
+	</BOUCLE_transaction>
+	[(#SET{auteur, [(#GET{auteur_civilite}) ][(#GET{auteur_prenom})][ (#GET{auteur_nom})]})]
+	<title>[\[(#NOM_SITE_SPIP)\]]\[commande-#STATUT-#ENV{mode}\] Commande #REFERENCE</title>
+	<body>
+		<:email:commande_vendeur_reglement_{=#ENV{mode}, reference=#REFERENCE, auteur=#GET{auteur}, transaction=#GET{transaction}}|propre:>
+		<hr />
+		#INCLURE{fond=inclure/notifications/recapitulatif_commande, id_commande}
+		<hr />
+	</body>
+	#FILTRE{facteur_email_wrap_to_html}
+</BOUCLE_commande_attente>

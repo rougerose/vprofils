@@ -1,0 +1,48 @@
+<BOUCLE_commande_attente(COMMANDES){id_commande}>
+	<BOUCLE_auteur(AUTEURS){id_auteur}>
+		<BOUCLE_contact(CONTACTS){id_auteur}>
+			#SET{auteur_civilite, #CIVILITE}
+			#SET{auteur_prenom, #PRENOM}
+			#SET{auteur_nom, #NOM}
+		</BOUCLE_contact>
+			#SET{auteur_civilite, ''}
+			[(#SET{auteur_prenom, #NOM|prenom})]
+			[(#SET{auteur_nom, #NOM|nom})]
+		<//B_contact>
+	</BOUCLE_auteur>
+	<BOUCLE_transaction(TRANSACTIONS){id_commande}>
+		[(#MODE|match{virement}|oui)
+			[(#SET{ordre, #ENV{config/ordre, #NOM_SITE_SPIP}})]
+			[(#SET{montant, #MONTANT|affiche_monnaie|})]
+			[(#SET{transaction, #ID_TRANSACTION})]
+			[(#SET{iban,#ENV{config/iban}})]
+			[(#SET{bic,#ENV{config/bic}})]
+			[(#SET{banque,#ENV{config/banque}})]
+			[(#SET{adressebanque,#ENV{config/adresse_banque}|nl2br})]
+		][(#MODE|match{cheque}|oui)
+			[(#SET{ordre, #ENV{config/ordre, #NOM_SITE_SPIP}})]
+			[(#SET{montant, #MONTANT|affiche_monnaie})]
+			[(#SET{transaction, #ID_TRANSACTION})]
+			[(#SET{adresse, #ENV{config/adresse}})]
+		]
+	</BOUCLE_transaction>
+	<title><:email:commande_client_attente_objet{nom_site=#NOM_SITE_SPIP}:></title>
+	<body>
+		[(#GET{auteur_civilite}|oui)
+			<p><:email:cher_chere_{=#GET{auteur_civilite}}:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom}),]</p>
+		][(#GET{auteur_civilite}|non)
+			<p><:email:bonjour:>[ (#GET{auteur_prenom})][ (#GET{auteur_nom}),]</p>
+		][(#MODE|match{virement}|oui)
+			<:email:commande_client_attente_virement_intro{reference=#REFERENCE}|propre:>
+			<:email:commande_client_attente_virement_paiement{montant=#GET{montant}, transaction=#GET{transaction}, ordre=#GET{ordre}, iban=#GET{iban}, bic=#GET{bic}, banque=#GET{banque}, adressebanque=#GET{adressebanque}}|propre:>
+		][(#MODE|match{cheque}|oui)
+			<:email:commande_client_attente_cheque_intro{reference=#REFERENCE}|propre:>
+			<:email:commande_client_attente_cheque_paiement{ordre=#GET{ordre}, montant=#GET{montant}, transaction=#GET{transaction}, adresse=#GET{adresse}}|propre:>
+		]
+		<p><:email:politesse_signature:></p>
+		<hr />
+		#INCLURE{fond=inclure/notifications/recapitulatif_commande, id_commande}
+		<hr />
+	</body>
+	#FILTRE{facteur_email_wrap_to_html}
+</BOUCLE_commande_attente>

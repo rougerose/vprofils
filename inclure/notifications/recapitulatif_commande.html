@@ -1,0 +1,29 @@
+<BOUCLE_commande(COMMANDES){id_commande=#ENV{id_commande}}>
+	<h3><:commandes:recapitulatif:></h3>
+	[(#SET{date, #DATE|affdate_heure})]
+	<p><:email:notification_commande_numero{reference=#REFERENCE, date=#GET{date}}:></p>
+	<B_details>
+		<table style="width:100%;">
+			<tbody>
+				<BOUCLE_details(COMMANDES_DETAILS){id_commande}{par id_commandes_detail}>
+					<tr class="detail" style="vertical-align:bottom;">
+						[(#OBJET|=={rubrique}|oui)
+							<INCLURE{fond=inclure/notifications/recapitulatif_commande_numero, id_commandes_detail}/>
+						][(#OBJET|=={abonnements_offre}|oui)
+							<INCLURE{fond=inclure/notifications/recapitulatif_commande_abonnement, id_commandes_detail}/>
+						][(#OBJET|=={produit}|oui)
+							<INCLURE{fond=inclure/notifications/recapitulatif_commande_cadeau, id_commandes_detail}/>
+						]
+					</tr>
+				</BOUCLE_details>
+			</tbody>
+			<tfoot>
+				<tr class="commande-total" style="text-align:right;">
+					<td style="width:60%;"></td>
+					<td style="width:20%;"><strong><:prix:label_total_ttc:></strong></td>
+					<td style="width:20%;">[<strong>(#PRIX{commande, #ID_COMMANDE})</strong>]</td>
+				</tr>
+			</tfoot>
+		</table>
+	</B_details>
+</BOUCLE_commande>

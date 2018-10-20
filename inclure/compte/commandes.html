@@ -1,0 +1,10 @@
+<BOUCLE_profil(AUTEURS){id_auteur}{tout}>
+	[(#SET{objets, #ARRAY{1, commande}})]
+	[(#SET{objet, #ENV{objet}|in_array{#GET{objets}}|?{#ENV{objet}, ''}})]
+
+	[(#GET{objet}|non)
+		<INCLURE{fond=inclure/compte/commandes-liste, id_auteur}/>
+	][(#GET{objet}|=={commande}|oui)
+		<INCLURE{fond=inclure/compte/commandes-commande, id_auteur, id_commande=#ENV{id_objet}}/>
+	]
+</BOUCLE_profil>

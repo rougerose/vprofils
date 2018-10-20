@@ -1,0 +1,9 @@
+<BOUCLE_cadeau(COMMANDES_DETAILS){id_commandes_detail}>
+	<BOUCLE_numero_cadeau(PRODUITS){id_produit=#ID_OBJET}>
+		<td class="description" style="width:60%;">
+			<:vpaniers:commande_recap_cadeau{descriptif=#TITRE}:>
+		</td>
+		<td class="quantite" style="text-align:right;width:20%;">&times; #QUANTITE</td>
+		<td class="montant" style="text-align:right;width:20%;">[(#PRIX{#OBJET,#ID_OBJET})]</td>
+	</BOUCLE_numero_cadeau>
+</BOUCLE_cadeau>

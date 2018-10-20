@@ -1,0 +1,13 @@
+<BOUCLE_profil(AUTEURS){id_auteur}{tout}>
+<section class="c-section">
+	<h2 class="c-section__titre u-typo-font-vacarme u-typo-upper"><:vprofils:compte_titre_page_section_informations:></h2>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})">&#8592; Revenir à la page principale</a></p>]
+	[<div class="ajax">
+		(#FORMULAIRE_MODIFIER_PROFIL{#ID_AUTEUR, #ENV{retour}})
+	</div>]
+	<div class="c-mentions c-mentions--etroit">
+	<p class="c-mentions__texte"><:vprofils:mentions_compte_profil:></p>
+	</div>
+	[<p><a class="c-lien" href="(#SELF|parametre_url{section, ''})">&#8592; Revenir à la page principale</a></p>]
+</section>
+</BOUCLE_profil>

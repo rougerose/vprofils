@@ -1,0 +1,10 @@
+<BOUCLE_commande_numero(COMMANDES_DETAILS){id_commandes_detail}>
+	<BOUCLE_numero_rubrique(RUBRIQUES){id_rubrique=#ID_OBJET}>
+		<td class="description" style="width:60%;">
+			[(#SET{descriptif, #TITRE})][(#SET{date_numero, [(#DATE_NUMERO|saison)[&nbsp;(#DATE_NUMERO|annee)]]})]
+			<:vpaniers:commande_recap_numero{descriptif=#GET{descriptif}, date_numero=#GET{date_numero}}:>
+		</td>
+		<td class="quantite" style="text-align:right;width:20%;">&times; #QUANTITE</td>
+		<td class="montant" style="text-align:right;width:20%;">[(#PRIX{#OBJET,#ID_OBJET})]</td>
+	</BOUCLE_numero_rubrique>
+</BOUCLE_commande_numero>

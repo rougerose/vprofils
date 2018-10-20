@@ -1,0 +1,86 @@
+[(#REM)
+	<!-- 
+		Identifier l'abonnement offert. S'il en existe plusieurs dans le panier,
+		le formulaire demande au payeur de désigner explicitement l'abonnement.
+	-->
+]
+#SET{_id_abonnement, #ARRAY}
+#SET{_id_abonnements, #ARRAY}
+<BOUCLE_panier(spip_paniers_liens){id_panier=#SESSION{id_panier}}{objet=abonnements_offre}>
+	#SET{options, #OPTIONS}
+	<BOUCLE_options(DATA){source table, #GET{options}}>
+		[(#SET{cle, #COMPTEUR_BOUCLE|moins{1}})]
+		[(#SET{opt_coupon, #OPTIONS|table_valeur{#GET{cle}}|table_valeur{0}})]
+		<BOUCLE_titre(ABONNEMENTS_OFFRES){id_abonnements_offre=#ID_OBJET}{si #GET{opt_coupon}|=={oui}}>
+			[(#SET{titre, [(#TITRE)[ / (#DUREE|numeros_nombre_en_clair)][ / (#PRIX)]]})]
+			[(#GET{opt_coupon}|=={oui}|oui)
+				[(#SET{id, [(#ID_OBJET)-[(#GET{cle})]]})]
+				[(#SET{_id_abonnements, #GET{_id_abonnements}|plus{#ARRAY{#GET{id}, #GET{titre}}}})]
+				[(#SET{_id_abonnement, #GET{_id_abonnement}|push{#GET{id}}})]
+			]
+		</BOUCLE_titre>
+	</BOUCLE_options>
+</BOUCLE_panier>
+
+<div class="formulaire_spip formulaire_inscription">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+		<form method="post" action="#ENV{action}">
+			#ACTION_FORMULAIRE
+			[(#REM) 
+			<!-- 
+				ajouter pgp en hidden, ce champ permettra de stocker 
+				- provisoirement - l'identification de cet auteur 
+				comme bénéficiaire d'un abonnement offert,
+				ainsi que la date d'envoi souhaitée par le payeur.
+			-->]
+			[(#SAISIE{hidden, id_payeur, defaut=#SESSION{id_auteur}})]
+			[(#GET{_id_abonnements}|count|>{1}|non)
+				[(#SAISIE{hidden, _id_abonnement, defaut=#GET{_id_abonnement}|table_valeur{0}})]
+			]
+			<div class="formulaire__groupe formulaire__groupe--identite">
+				<fieldset>
+					<legend><:vprofils:formulaire_compte_tiers_titre:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{civilite, civilite, label=<:vprofils:formulaire_civilite_label:>, obligatoire=oui})]
+						[(#SAISIE{input, nom_inscription, label=<:vprofils:formulaire_nom_label:>, obligatoire=oui})]
+						[(#SAISIE{input, prenom, label=<:vprofils:formulaire_prenom_label:>, obligatoire=oui})]
+						[(#SAISIE{email, mail_inscription, label=<:vprofils:formulaire_mail_label:>, obligatoire=oui})]
+					</div>
+				</fieldset>
+			</div>
+			<div class="formulaire__groupe formulaire__groupe--adresse">
+				<fieldset>
+					<legend><:vprofils:formulaire_coordonnees_tiers_titre:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{input, organisation, label=<:vprofils:formulaire_organisation_label:>})]
+						[(#SAISIE{input, service, label=<:vprofils:formulaire_service_label:>})]
+						[(#SAISIE{input, voie, label=<:vprofils:formulaire_voie_label:>, obligatoire=oui})]
+						[(#SAISIE{input, complement, label=<:vprofils:formulaire_complement_label:>})]
+						[(#SAISIE{input, boite_postale, label=<:vprofils:formulaire_boite_postale_label:>})]
+						[(#SAISIE{input, code_postal, label=<:vprofils:formulaire_code_postal_label:>, obligatoire=oui})]
+						[(#SAISIE{input, ville, label=<:vprofils:formulaire_ville_label:>, obligatoire=oui})]
+						[(#SAISIE{input, region, label=<:vprofils:formulaire_region_label:>})]
+						[(#SAISIE{pays, pays, label=<:vprofils:formulaire_pays_label:>, defaut=FR, obligatoire=oui, code_pays=oui})]
+					</div>
+				</fieldset>
+			</div>
+			<div class="formulaire__groupe">
+				<fieldset>
+					<div class="editer-groupe">
+						[(#SAISIE{textarea, texte_message, label=<:vprofils:formulaire_message_texte_label:>, rows=10})]
+						[(#SET{dates, #ARRAY})][(#SET{dates, #GET{dates}|liste_dates})]
+						[(#SAISIE{selection, message_date, label=<:vprofils:formulaire_message_date_envoi_label:>, cacher_option_intro=oui, obligatoire=oui, data=#GET{dates}})]
+					</div>
+				</fieldset>
+			</div>
+			[(#GET{_id_abonnements}|count|>{1}|oui)
+				[(#INCLURE{fond=formulaires/inc-inscription_tiers_abonnements, _id_abonnements=#GET{_id_abonnements}})]
+			]
+			<p class="boutons">
+				<input type="submit" class="submit" value="<:bouton_valider:>" />
+			</p>
+		</form>
+	]
+</div>

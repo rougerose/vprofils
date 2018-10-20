@@ -1,0 +1,10 @@
+<BOUCLE_commande(COMMANDES){id_commande}{statut?}{tout}>
+<title>[(#NOM_SITE_SPIP)] : commande #REFERENCE est en cours d'expédition</title>
+<body>
+	<p>La commande #REFERENCE (détaillée ci-dessous) est en cours d'expédition. Un mail d'information a également été envoyé au client.</p>
+	<hr />
+	[(#INCLURE{fond=inclure/notifications/recapitulatif_commande, id_commande})]
+	<hr />
+</body>
+</BOUCLE_commande>
+#FILTRE{facteur_email_wrap_to_html}

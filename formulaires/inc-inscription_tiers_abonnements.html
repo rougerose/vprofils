@@ -1,0 +1,10 @@
+<div class="formulaire__groupe formulaire__groupe--choix-abonnement">
+	<fieldset>
+		<legend><:vprofils:formulaire_compte_tiers_choixabo_titre:></legend>
+		<div class="editer-groupe">
+			[(#SAISIE{selection, _id_abonnement, label=<:vprofils:formulaire_choixabo_label:>,
+				cacher_option_intro=oui, obligatoire=oui, 
+				datas=#ENV{_id_abonnements}})]
+		</div>
+	</fieldset>
+</div>

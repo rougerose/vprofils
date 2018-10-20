@@ -1,0 +1,26 @@
+<BOUCLE_commande_abonnement(COMMANDES_DETAILS){id_commandes_detail}>
+	[(#SET{options, #OPTIONS|vpaniers_options_expliquer_options})]
+	<BOUCLE_abonnement(ABONNEMENTS_OFFRES){id_abonnements_offre=#ID_OBJET}>
+		[(#SET{titre, #TITRE})]
+		[(#SET{numeros, #DUREE|numeros_nombre_en_clair})]
+		[(#SET{duree_nb, #DUREE|numeros_nombre})]
+		[(#SET{prix_abonnement, #PRIX})]
+	</BOUCLE_abonnement>
+	<BOUCLE_data(DATA){source tableau, #GET{options}}>
+		[(#SET{prix, [(#VALEUR{prix_souscripteur}|?{
+			[(#VALEUR{prix_souscripteur}|prix_formater)],
+			[(#GET{prix_abonnement})]})] 
+		})]
+		<td class="description" style="width:60%;">
+			[(#REM) Abonnement offert][(#VALEUR{nom_inscription}|oui)
+				[(#SET{beneficiaire, [(#VALEUR{prenom})[(#VALEUR{nom_inscription})]]})]
+				<:vpaniers:commande_recap_abonnement_offert{descriptif=#GET{titre}, numeros=#GET{numeros}, beneficiaire=#GET{beneficiaire}}:>
+			][(#REM) Abonnement perso][(#VALEUR{nom_inscription}|non)
+				[(#SET{numero_debut,[Vacarme (#VALEUR{numero_debut})]})]
+				<:vpaniers:commande_recap_abonnement_perso{descriptif=#GET{titre}, numero_debut=#GET{numero_debut}, numeros=#GET{numeros}}:>
+			]
+		</td>
+		<td class="quantite" style="text-align:right;width:20%;">&times; 1</td>
+		<td class="montant" style="text-align:right;width:20%;">[(#GET{prix})]</td>
+	</BOUCLE_data>
+</BOUCLE_commande_abonnement>
