@@ -334,39 +334,59 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
 		AND strpos($flux['args']['mode'], 'virement') !== false 
 		OR strpos($flux['args']['mode'], 'cheque') !== false
 	) {
+		$notifier = true;
 		
 		$id_auteur = $flux['args']['row']['id_auteur'];
 		$id_commande = $flux['args']['row']['id_commande'];
 		$source = sql_getfetsel('source', 'spip_commandes', 'id_commande='.intval($id_commande));
 		
-		include_spip('inc/bank');
-		$config = bank_config($flux['args']['mode']);
-		
-		// envoyer la notification
-		$notifications = charger_fonction('notifications', 'inc');
-		$options = array(
-			'id_auteur' => intval($id_auteur),
-			'config' => $config
-		);
-		// pour le client
-		$notifications('commande_client_attente', $id_commande, $options);
-		// pour Vacarme
-		$notifications('commande_vendeur_attente', $id_commande);
-		
-		
-		// supprimer le panier si nécessaire
+		// Commande pages publiques : 
+		// --------------------------
+		// supprimer la référence du panier si elle est présente
+		// dans le champ Source de la commande
 		if ($source AND preg_match(",panier#(\d+)$,", $source, $m)) {
 			$id_panier = intval($m[1]);
 			
 			$supprimer_panier = charger_fonction('supprimer_panier', 'action/');
 			$supprimer_panier($id_panier);
 			
+			// notifier
+			$notifier = true;
+			
+			// effacer la référence du panier
 			sql_updateq("spip_commandes", array('source' => ''), "source=" . sql_quote($source));
+		}
+		
+		// Commande espace privé :
+		// ----------------------
+		// La commande a été faite par un admin. Pas de notification automatique
+		// destinée au client.
+		if ($source AND preg_match(",admin#\d+,", $source)) {
+			$notifier = false;
+		}
+		
+		include_spip('inc/bank');
+		$config = bank_config($flux['args']['mode']);
+		
+		// Envoyer la notification
+		$notifications = charger_fonction('notifications', 'inc');
+		$options = array(
+			'id_auteur' => intval($id_auteur),
+			'config' => $config
+		);
+		
+		// Pour Vacarme
+		$notifications('commande_vendeur_attente', $id_commande);
+		
+		// Pour le client
+		if ($notifier) {
+			$notifications('commande_client_attente', $id_commande, $options);
 		}
 	}
 	
 	return $flux;
 }
+
 
 /**
  * Notification des paiements reçus
@@ -375,7 +395,6 @@ function vprofils_trig_bank_reglement_en_attente($flux) {
  */
 function vprofils_bank_traiter_reglement($flux) {
 	if ($id_transaction = $flux['args']['id_transaction']
-		AND $flux['args']['notifier'] == true
 		AND $transaction = sql_fetsel('id_auteur, id_commande, statut, mode', 'spip_transactions', 'id_transaction='.intval($id_transaction))
 		AND $id_commande = intval($transaction['id_commande'])
 		AND $commande_statut = sql_getfetsel('statut', 'spip_commandes', 'id_commande='.$id_commande)
@@ -386,11 +405,23 @@ function vprofils_bank_traiter_reglement($flux) {
 		$config = bank_config($transaction['mode']);
 		$id_auteur = $transaction['id_auteur'];
 		
+		$notifier = $flux['args']['notifier'];
+		
+		$source = sql_getfetsel('source', 'spip_commandes', 'id_commande='.intval($id_commande));
+		if ($source AND preg_match(",admin#\d+,", $source)) {
+			$notifier = false;
+		}
 		
 		// Les offres d'abonnement obligatoire ou permanent ne font pas l'objet
 		// d'une notification
 		include_spip('inc/vabonnements');
 		$offres_obligatoires = vabonnements_offres_obligatoires();
+		
+		// Si la commande contient un abonnement de type permanent ou obligatoire,
+		// ne pas notifier le client
+		if (sql_countsel('spip_commandes_details', sql_in('id_objet', $offres_obligatoires).' AND id_commande='.$id_commande.' AND objet='.sql_quote('abonnements_offre'))) {
+			$notifier = false;
+		}
 		
 		// Envoyer les notifications
 		$notifications = charger_fonction('notifications', 'inc');
@@ -402,9 +433,7 @@ function vprofils_bank_traiter_reglement($flux) {
 		// Notifier Vacarme, dans tous les cas.
 		$notifications('commande_vendeur_reglement', $id_commande, $options);
 		
-		// Si la commande ne contient pas un abonnement de type permanent ou obligatoire,
-		// notifier le client
-		if (!sql_countsel('spip_commandes_details', sql_in('id_objet', $offres_obligatoires).' AND id_commande='.$id_commande.' AND objet='.sql_quote('abonnements_offre'))) {
+		if ($notifier) {
 			$notifications('commande_client_reglement', $id_commande, $options);
 		}
 	}
