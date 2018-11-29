@@ -29,7 +29,7 @@ function vprofils_declarer_champs_extras($champs = array()) {
 		'options' => array(
 			'nom' => 'code_facteur',
 			'label' => _T('vprofils:formulaire_code_facteur_label'),
-			'sql' => "int(4) NOT NULL DEFAULT 0"
+			'sql' => "int(4) UNSIGNED ZEROFILL NOT NULL DEFAULT 0"
 		)
 	);
 	
