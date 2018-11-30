@@ -10,22 +10,10 @@ if (!defined('_ADRESSE_TYPE_DEFAUT')) {
 }
 
 /**
- * Autorisation instituer commandes
- *
- * Pour interdire de changer le statut d'une commande depuis l'espace privé. 
- * Le changement de statut doit passer par les actions programmées uniquement.
- * 
- * @param  [type] $faire [description]
- * @param  [type] $type  [description]
- * @param  [type] $id    [description]
- * @param  [type] $qui   [description]
- * @param  [type] $opt   [description]
- * @return [type]        [description]
+ * La liste des auteurs autorisés à faire des encaissements (chèque ou virement)
+ * 394 -> LV.
  */
-function autoriser_commande_instituer($faire, $type, $id, $qui, $opt){
-	return false;
-}
-
+define('_ID_GESTIONNAIRES', '394');
 
 
 /**
