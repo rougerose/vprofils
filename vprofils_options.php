@@ -11,9 +11,11 @@ if (!defined('_ADRESSE_TYPE_DEFAUT')) {
 
 /**
  * La liste des auteurs autorisés à faire des encaissements (chèque ou virement)
- * 394 -> LV.
+ * 394 -> LV
+ * 168 -> VC
+ * 507 -> ML
  */
-define('_ID_GESTIONNAIRES', '394');
+define('_ID_GESTIONNAIRES', '394:168:507');
 
 
 /**
