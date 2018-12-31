@@ -130,6 +130,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_page_configurer_vprofils' => 'Configurer le plugin vprofils',
 	'titre_icone_compte' => 'Votre compte',
 	'titre_icone_logout' => "Déconnectez-vous",
+	'titre_codes_facteur' => "Codes facteur",
 	
 	// V
 	'vprofils_titre' => 'Vacarme profils',

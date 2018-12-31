@@ -1,7 +1,7 @@
 <paquet
 	prefix="vprofils"
 	categorie="auteur"
-	version="1.1.6"
+	version="1.1.7"
 	etat="dev"
 	compatibilite="[3.2.0;3.2.*]"
 	logo="prive/themes/spip/images/vprofils-64.png"
@@ -35,7 +35,7 @@
 	<pipeline nom="bank_traiter_reglement" inclure="vprofils_pipelines.php" />
 	<pipeline nom="types_coordonnees" inclure="vprofils_pipelines.php" />
 	
-	<menu nom="configurer_vprofils" titre="vprofils:vprofils_titre" parent="menu_configuration" icone="images/vprofils-16.png" />
+	<menu nom="codes_facteur" titre="vprofils:titre_codes_facteur" parent="menu_activite" icone="images/vprofils-16.png" action="codes_facteur" />
 	
 	<spip compatibilite="[3.2.0;3.2.*]">
 		<style type="prive" source="css/vprofils_prive.css" />
