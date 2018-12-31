@@ -1,0 +1,52 @@
+[(#SET{defaut_tri, #ARRAY{
+	id_auteur, 1,
+	maj, 1,
+	code_facteur, 1
+}})]
+<B_adresses>
+	#ANCRE_PAGINATION
+	<div class="liste-objets codes_facteur">
+		<table id="" class="spip liste">
+			[<caption><strong class="caption">(#ENV*{titre})</strong></caption>]
+			<thead>
+				<tr class="first_row">
+					<th class="id_auteur" scope="col">[(#TRI{id_auteur,id_auteur,ajax})]</th>
+					<th class="auteur" scope="col">NOM*Prénom</th>
+					<th class="organisation" scope="col">Organisation</th>
+					<th class="service" scope="col">Service</th>
+					<th class="voie" scope="col"><:coordonnees:adresse:></th>
+					<th class="complement" scope="col">Complément</th>
+					<th class="boite_postale" scope="col">Boite postale</th>
+					<th class="code_postal" scope="col">Code postal</th>
+					<th class="ville" scope="col">Ville</th>
+					<th class="region" scope="col">Région</th>
+					<th class="pays" scope="col"><:coordonnees:label_pays:></th>
+					<th class="date" scope="col">[(#TRI{maj,Mise à jour Adresse,ajax})]</th>
+					<th class="code_facteur" scope="col">[(#TRI{code_facteur,Code facteur,ajax})]</th>
+				</tr>
+			</thead>
+			<tbody>
+				<BOUCLE_adresses(ADRESSES){id_auteur IN #ENV{auteurs}}{pays=FR}{tri #ENV{par, id_adresse},#GET{defaut_tri}}{pagination #ENV{nb,20}}>
+					<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
+						<td class="id_auteur">#ID_AUTEUR</td>
+						<td class="auteur"><a href="#URL_ECRIRE{auteur, id_auteur=#ID_AUTEUR}">[(#INFO_NOM{auteur, #ID_AUTEUR}|nom)]*[(#INFO_NOM{auteur, #ID_AUTEUR}|prenom)]</a></td>
+						<td class="organisation">#ORGANISATION</td>
+						<td class="organisation">#SERVICE</td>
+						<td class="voie">[(#VOIE)]</td>
+						<td class="complement">[(#COMPLEMENT)]</td>
+						<td class="boite_postale">[(#BOITE_POSTALE)]</td>
+						<td class="code_postal">[(#CODE_POSTAL)]</td>
+						<td class="ville">#VILLE</td>
+						<td class="region">#REGION</td>
+						<td class="pays"><BOUCLE_pays(PAYS){code=#PAYS*}>#NOM</BOUCLE_pays></td>
+						<td class="date">[(#MAJ|jour)][/(#MAJ|mois)][/(#MAJ|annee)]</td>
+						<td class="code_facteur">
+							<div class="ajax">#FORMULAIRE_MODIFIER_CODE_FACTEUR{#ID_ADRESSE, #CODE_FACTEUR, #SELF}</div>
+						</td>
+					</tr>
+				</BOUCLE_adresses>
+			</tbody>
+		</table>
+		[<p class='pagination'>(#PAGINATION{prive})</p>]
+	</div>
+</B_adresses>

@@ -1,0 +1,18 @@
+[(#SET{auteurs, #ARRAY})]
+<BOUCLE_abonnements(ABONNEMENTS){statut=actif}>
+	[(#SET{auteurs, #GET{auteurs}|push{#ID_AUTEUR}})]
+</BOUCLE_abonnements>
+
+<BOUCLE_envois_attente(ENVOIS_COMMANDES){statut=attente}>
+	[(#SET{auteurs, #GET{auteurs}|push{#ID_AUTEUR}})]
+</BOUCLE_envois_attente>
+
+[(#REM) 
+	Dédoubler le tableau 
+	http://php.net/manual/fr/function.array-unique.php#70786
+]
+[(#SET{auteurs, #GET{auteurs}|array_flip|array_keys})]
+
+<BOUCLE_has_adresse(DATA){source tableau, #GET{auteurs}}{0,1}>
+	<INCLURE{fond=prive/objets/liste/codes_facteur, auteurs=#GET{auteurs}, env, ajax} />
+</BOUCLE_has_adresse>

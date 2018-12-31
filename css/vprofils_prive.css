@@ -1,0 +1,14 @@
+
+
+/* formulaire_modifier_code_facteur */
+.formulaire_modifier_code_facteur {
+	text-align: center;
+}
+.formulaire_modifier_code_facteur input {
+	display: inline-block;
+	margin: .2em 0;
+}
+
+.formulaire_modifier_code_facteur .input_code_facteur {
+	width: 4.5em !important;
+}

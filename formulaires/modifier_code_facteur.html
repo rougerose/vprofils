@@ -1,0 +1,10 @@
+<div class="formulaire_spip formulaire_#FORM" id="formulaire_#FORM-#ENV{id_adresse}">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	<form action="#ENV{action}" method="post">
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<input type='hidden' name='id_adresse' value='#ENV{id_adresse}' />
+		<input id="adresse-#ENV{id_adresse}" type="text" class="text input_code_facteur" name="code_facteur" value="#ENV{code_facteur}">
+		<input type="submit" class="submit" value="Enregistrer">
+	</form>
+</div>
