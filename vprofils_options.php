@@ -18,11 +18,6 @@ if (!defined('_ADRESSE_TYPE_DEFAUT')) {
 define('_ID_GESTIONNAIRES', '394:168:507');
 
 /**
- * Permettre un Nom d'inscription de 3 lettres
- */
-define('_LOGIN_TROP_COURT', 3);
-
-/**
  * Inscription : envoyer les identifiants par mail.
  *
  * Fonction redefinissable qui doit retourner un tableau
